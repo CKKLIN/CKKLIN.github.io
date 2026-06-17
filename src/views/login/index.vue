@@ -3,7 +3,7 @@
     <div class="contain" :class="{ register: !isLogin }">
       <div class="big-box" :class="{ active: isLogin }">
         <div class="big-contain" key="bigContainLogin" v-if="isLogin"  style="background-position: 80vw 80vh;"
-          :style="{ backgroundImage: `url(${bj5})`, backgroundSize: '100vw 100vh'}">
+          :style="{ backgroundImage: `url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj5.jpg'`, backgroundSize: '100vw 100vh'}">
           <el-form :model="loginForm" label-width="auto" class="login" ref="loginFormRef" :rules="loginRules">
             <div class="btitle">用户登录</div>
             <el-form-item style="width: 40%;" prop="account" label-width="0">
@@ -29,7 +29,7 @@
         </div>
 
         <div class="big-contain" key="bigContainRegister" v-else  style="background-position: 53vw 80vh;"
-          :style="{ backgroundImage: `url(${bj4})`, backgroundSize: '100vw 100vh' }">
+          :style="{ backgroundImage: `url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj4.jpeg')`, backgroundSize: '100vw 100vh' }">
           <el-form :model="registForm" label-width="auto" class="regist" ref="registFormRef" :rules="registRules">
             <div class="retitle">注册</div>
             <el-form-item style="width: 40%;" prop="account">
@@ -60,13 +60,13 @@
 
       <div class="small-box" :class="{ active: isLogin }">
         <div class="small-contain" key="smallContainRegister" v-if="isLogin"  style="background-position: 50vw 80vh;"
-          :style="{ backgroundImage: `url(${bj1})`, backgroundSize: '100vw 100vh' }">
+          :style="{ backgroundImage: `url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj1.jpg')`, backgroundSize: '100vw 100vh' }">
           <div class="stitle">欢迎回来!</div>
           <p class="scontent">请登录你的账户</p>
           <button class="sbutton" @click="changeType">注册</button>
         </div>
         <div class="small-contain" key="smallContainLogin" v-else  style="background-position: 80vw 80vh;"
-          :style="{ backgroundImage: `url(${bj4})`, backgroundSize: '100vw 100vh' }">
+          :style="{ backgroundImage: `url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj4.jpeg')`, backgroundSize: '100vw 100vh' }">
           <div class="stitle">
             <span>欢迎使用</span>
             <!-- <span>erzhi-blog</span> -->
@@ -88,9 +88,6 @@ import { useRouter } from 'vue-router'
 import { registAPI, getCaptchaAPI } from '@/api/login'
 import { useTokenStore } from '@/stores/token'
 import useCounter from '@/stores/pinia'
-import bj1 from '@/assets/bj/bj1.jpg'
-import bj4 from '@/assets/bj/bj4.jpeg'
-import bj5 from '@/assets/bj/bj5.jpg'
 
 useCounter()
 const router = useRouter()
@@ -259,7 +256,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   background-repeat: no-repeat;
-  background-image: url(@/assets/bj/bj1.jpg);
+  background-image: url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj1.jpg');
   background-size: 100vw 100vh;
   background-position: center;
 }

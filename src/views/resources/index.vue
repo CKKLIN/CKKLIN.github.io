@@ -35,7 +35,7 @@ const cardList = resourceData.cards
     display: flex;
     justify-content: center;
     /* align-items: center; */
-    background: url('@/assets/bj/bj22.jpg');
+    background: url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj22.jpg');
     background-size: 100% 100%;
     background-position: center center;
     background-repeat: no-repeat;

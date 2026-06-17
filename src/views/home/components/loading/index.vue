@@ -1,33 +1,27 @@
 <template>
     <div class="container">
         <div class="gif">
-            <img class="img":src="loading6">
+            <img class="img" src="https://sky-lkc.oss-cn-beijing.aliyuncs.com/gif/loading6.gif">
         </div>
         <div class="gif">
-            <img class="img":src="loading2">
+            <img class="img" src="https://sky-lkc.oss-cn-beijing.aliyuncs.com/gif/loading2.gif">
         </div>
         <div class="gif">
-            <img class="img":src="loading3">
+            <img class="img" src="https://sky-lkc.oss-cn-beijing.aliyuncs.com/gif/loading3.gif">
         </div>
         <div class="gif">
-            <img class="img":src="loading4">
+            <img class="img" src="https://sky-lkc.oss-cn-beijing.aliyuncs.com/gif/loading4.gif">
         </div>
         <div class="gif">
-            <img class="img":src="loading5">
+            <img class="img" src="https://sky-lkc.oss-cn-beijing.aliyuncs.com/gif/loading5.gif">
         </div>
         <div class="gif">
-            <img class="img":src="loading1">
+            <img class="img" src="https://sky-lkc.oss-cn-beijing.aliyuncs.com/gif/loading1.gif">
         </div>
     </div>
     </template>
-    <script setup lang="ts">
-    import loading1 from "@/assets/gif/loading1.gif"
-    import loading2 from "@/assets/gif/loading2.gif"
-    import loading3 from "@/assets/gif/loading3.gif"
-    import loading4 from "@/assets/gif/loading4.gif"
-    import loading5 from "@/assets/gif/loading5.gif"
-    import loading6 from "@/assets/gif/loading6.gif"
-</script>
+    <!-- <script setup lang="ts">
+</script> -->
 <style scoped > 
 .container{
     

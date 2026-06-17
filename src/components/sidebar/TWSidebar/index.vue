@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="header">
-            <img class="icon" :src=tuijianIcon />
+            <img class="icon" src='https://sky-lkc.oss-cn-beijing.aliyuncs.com/icon/tuijian.svg' />
             <div class="text">{{ title }}</div>
         </div>
         <div class="body">
@@ -11,7 +11,7 @@
                     <div class="ar-text">{{ item.title }}</div>
                 </div>
                 <div class="article-two">
-                    <img class="timeIcon" :src="calendar">
+                    <img class="timeIcon" src='https://sky-lkc.oss-cn-beijing.aliyuncs.com/icon/calendar.svg'>
                     <div class="ar-time">{{ item.time }}</div>
                 </div>
             </div>
@@ -20,8 +20,6 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import tuijianIcon from "@/assets/icon/tuijian.svg"
-import calendar from "@/assets/icon/calendar.svg"
 
 defineProps({
     title: {

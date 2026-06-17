@@ -1,21 +1,21 @@
 @font-face {
   font-family: "XiangJiaoGuiPuLingGanTi";
-  src: url("@/styles/font/XiangJiaoGuiPuLingGanTi-2.ttf");
+  src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/XiangJiaoGuiPuLingGanTi-2.ttf");
 }
 @font-face {
   font-family: "YuWoErYanNiZuiKeAi-2";
-  src: url("@/styles/font/YuWoErYanNiZuiKeAi-2.ttf");
+  src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/YuWoErYanNiZuiKeAi-2.ttf");
 }
 
-@font-face {
+/* @font-face {
   font-family: "AaRenJianRenAiYouQianHua-2";
-  src: url("@/styles/font/AaRenJianRenAiYouQianHua-2.ttf");
-}
+  src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/AaRenJianRenAiYouQianHua-2.ttf");
+} */
 @font-face {
   font-family: "ZiHun144Hao-LangYuanTi-2";
-  src: url("@/styles/font/ZiHun144Hao-LangYuanTi-2.ttf");
+  src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/ZiHun144Hao-LangYuanTi-2.ttf");
 }
 @font-face {
   font-family: "RuiZiJiJiaHongHuangChaoJiLiang";
-  src: url("@/styles/font/RuiZiJiJiaHongHuangChaoJiLiang.ttf");
+  src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/RuiZiJiJiaHongHuangChaoJiLiang.ttf");
 }

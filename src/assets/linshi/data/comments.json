@@ -256,7 +256,7 @@
         "id": 32
     },
     {
-        "imageUrl": "/src/assets/picture/ikun.jpg",
+        "imageUrl": "https://sky-lkc.oss-cn-beijing.aliyuncs.com/pictures/ikun.jpg",
         "name": "匿名用户",
         "comment": "45435的风格",
         "good": false,

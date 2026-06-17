@@ -32,8 +32,6 @@
 
 <script setup>
 import { computed } from 'vue'
-import goodIcon from '../assets/icon/good.svg'
-import goodedIcon from '../assets/icon/gooded.svg'
 
 const props = defineProps({
   comments: {

@@ -23,7 +23,7 @@
         <div class="info-toji">
             <div class="info-toji-box" v-if="userInfo.title">
                 <div class="info-toji-top">
-                    <img :src=titleIcon class="tojiIcon"></img>
+                    <img src='https://sky-lkc.oss-cn-beijing.aliyuncs.com/icon/title.svg' class="tojiIcon"></img>
                     <div class="toji-text">文章</div>
                 </div>
                 <div class="info-toji-num">{{ userInfo.title }}</div>
@@ -31,7 +31,7 @@
             </div>
             <div class="info-toji-box" v-if="userInfo.resources">
                 <div class="info-toji-top">
-                    <img :src=ziyuanIcon class="tojiIcon"></img>
+                    <img src='https://sky-lkc.oss-cn-beijing.aliyuncs.com/icon/ziyuan.svg' class="tojiIcon"></img>
                     <div class="toji-text">资源</div>
                 </div>
                 <div class="info-toji-num">{{ userInfo.resources }}</div>
@@ -39,7 +39,7 @@
             </div>
             <div class="info-toji-box" v-if="userInfo.look">
                 <div class="info-toji-top">
-                    <img :src=hotIcon class="tojiIcon"></img>
+                    <img src='https://sky-lkc.oss-cn-beijing.aliyuncs.com/icon/hot.svg' class="tojiIcon"></img>
                     <div class="toji-text">访客量</div>
                 </div>
                 <div class="info-toji-num">{{ userInfo.look }}</div>
@@ -51,9 +51,6 @@
 
 </template>
 <script setup>
-import titleIcon from "@/assets/icon/title.svg"
-import hotIcon from "@/assets/icon/hot.svg"
-import ziyuanIcon from "@/assets/icon/ziyuan.svg"
 import { ref, computed } from 'vue'
 const props = defineProps({
     userInfo: {

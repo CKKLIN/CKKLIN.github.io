@@ -1,7 +1,7 @@
 <template>
     <div class="login-page">
         <div class="top">
-            <img :src=backIcon class="back" @click="goBack()">
+            <img src='https://sky-lkc.oss-cn-beijing.aliyuncs.com/icon/back.svg' class="back" @click="goBack()">
         </div>
         <div class="card-wrap">
             <div class="logo"><img :src="logoIcon"></div>
@@ -51,7 +51,6 @@ import { useRouter } from 'vue-router'
 import { useTokenStore } from '@/stores/token'
 import { fetchUsers, registerUser } from '@/api/userApi'
 import logoIcon from '../../../public/logo.png'
-import backIcon from '@/assets/icon/back.svg'
 
 
 const router = useRouter()

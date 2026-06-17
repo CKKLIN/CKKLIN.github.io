@@ -1,15 +1,15 @@
 <template>
     <div class="mainjing">
-        <button class="capsule-btn" @click="lookContent('/mianjingListh5')">VUE</button>
+        <button class="capsule-btn" @click="lookContent('vue')">VUE</button>
+        <button class="capsule-btn" @click="lookContent('uniapp')">UNIAPP</button>
     </div>
 </template>
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const route = useRoute()
-const lookContent=(path)=>{
-  router.push(path)
+const lookContent = (category) => {
+    router.push({ path: '/mianjingListh5', query: { category } })
 }
 
 </script>
@@ -20,7 +20,7 @@ const lookContent=(path)=>{
     display: flex;
     align-items: center;
     justify-content: center;
-    
+    gap: 20px;
 }
 
 .capsule-btn {

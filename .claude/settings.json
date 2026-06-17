@@ -5,7 +5,8 @@
       "Bash(xargs grep -l \"three\\\\|THREE\")",
       "Bash(mkdir -p d:/money/erzhi-blog-vue3/src/components/WaterMistGlass/shaders)",
       "Bash(npx vite *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(npx vue-tsc *)"
     ],
     "additionalDirectories": [
       "d:\\money\\erzhi-blog-vue3\\src\\components\\WaterMistGlass"

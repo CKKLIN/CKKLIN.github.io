@@ -38,7 +38,6 @@ import useCounter from '../../stores/pinia';
 import { useRouter } from 'vue-router';
 import { parseJwt } from '../../stores/pinia';
 import CommentSection from '../../components/CommentSection.vue'
-import avatarImg from '@/assets/picture/ikun.jpg'
 
 // const list = ref();
 const good = ref(false)
@@ -66,7 +65,7 @@ const fetchComments = async () => {
 
 // 设置默认头像
 const setDefaultImage = (event) => {
-  event.target.src = avatarImg
+  event.target.src = 'https://sky-lkc.oss-cn-beijing.aliyuncs.com/pictures/ikun.jpg'
 }
 
 const saveComments = () => {
@@ -80,7 +79,7 @@ const send = async () => {
     return
   }
   const newComment = {
-    imageUrl: avatarImg,
+    imageUrl: 'https://sky-lkc.oss-cn-beijing.aliyuncs.com/pictures/ikun.jpg',
     name: user.value?.name || '匿名用户',
     comment: trimmedInput,
     good: false,
@@ -192,7 +191,7 @@ font-family: 'YuWoErYanNiZuiKeAi-2';
   position: relative;
   overflow: auto;
   padding-top: 40px;
-  background-image: url(@/assets/picture/bj3.jpg);
+  background-image: url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/pictures/bj3.jpg');
   background-size: cover;
 }
 

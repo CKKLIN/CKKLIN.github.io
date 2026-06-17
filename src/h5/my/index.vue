@@ -20,7 +20,7 @@
                     <span class="fav-index">{{ item.id }}</span>
                     <span class="fav-title">{{ item.title }}</span>
                     <span class="fav-remove" @click.stop="removeFav(item.id)">
-                        <img :src="collectedIcon">
+                        <img src='https://sky-lkc.oss-cn-beijing.aliyuncs.com/icon/collected.svg'>
                     </span>
                 </div>
             </div>
@@ -33,8 +33,6 @@
 </template>
 
 <script setup>
-import avatarIcon from '../../assets/picture/avatar.png'
-import collectedIcon from '@/assets/icon/collected.svg'
 import { useRouter } from 'vue-router'
 import { vueList } from '@/assets/linshi/data/h5/mainjing'
 import { useTokenStore } from '@/stores/token'
@@ -48,7 +46,7 @@ const currentUser = ref(null)
 
 const userAvatar = computed(() => {
     const avatar = currentUser.value?.avatar
-    return avatar && avatar !== 'default' ? avatar : avatarIcon
+    return avatar && avatar !== 'default' ? avatar : 'https://sky-lkc.oss-cn-beijing.aliyuncs.com/pictures/avatar.png'
 })
 
 const isLoggedIn = computed(() => !!tokenStore.token)

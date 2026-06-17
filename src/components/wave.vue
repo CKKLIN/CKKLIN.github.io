@@ -2,12 +2,12 @@
   <div class="wave">
     <div class="image-container">
       <div class="image-wrapper">
-        <img v-for="(_, i) in 2" :key="i" src="@/assets/picture/bannerWave1.png" alt="wave" />
+        <img v-for="(_, i) in 2" :key="i" src="https://sky-lkc.oss-cn-beijing.aliyuncs.com/pictures/bannerWave1.png" alt="wave" />
       </div>
     </div>
     <div class="image-container">
       <div class="image-wrapper1">
-        <img v-for="(_, i) in 2" :key="i" src="@/assets/picture/bannerWave2.png" alt="wave" />
+        <img v-for="(_, i) in 2" :key="i" src="https://sky-lkc.oss-cn-beijing.aliyuncs.com/pictures/bannerWave2.png" alt="wave" />
       </div>
     </div>
   </div>

@@ -20,7 +20,7 @@
           </div>
           <div class="body-right-two">
 
-            <img class="hornIcon" :src=hornIcon />
+            <img class="hornIcon" src='https://sky-lkc.oss-cn-beijing.aliyuncs.com/icon/horn.svg' />
             <div class="hornMsg">公告！！！！！！</div>
           </div>
           <div class="body-right-three">
@@ -36,11 +36,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import wave from '@/components/wave.vue'
-import player from '@/assets/icon/player.png'
-import pause from '@/assets/icon/pause.png'
-import ikun from '@/assets/picture/ikun.jpg'
 import useCounter from '@/stores/pinia'
-import hornIcon from '@/assets/icon/horn.svg'
 import infoCard from '@/components/info/infoCard/index.vue'
 import createTime from '@/views/home/components/createTime/index.vue'
 import loading from '@/views/home/components/loading/index.vue'
@@ -57,7 +53,7 @@ let typeIndex = 0
 const user = ref({
   id: null,
   userName: '木二支',
-  avatarUrl: ikun,
+  avatarUrl: 'https://sky-lkc.oss-cn-beijing.aliyuncs.com/pictures/ikun.jpg',
   title: 1223,
   look: 45654,
   resources: 234,
@@ -151,6 +147,8 @@ onMounted(() => {
   height: 100vh;
   overflow-y: auto;
   position: relative;
+  background-image: url(@/assets/bj/header.jpg);
+  background-size: cover;
   animation: slideDown 1.5s ease-in-out forwards;
 }
 
@@ -271,7 +269,7 @@ onMounted(() => {
   align-items: center;
   /* background: url(@/assets/bj/bj7.jpg) no-repeat center center / cover;
   background: linear-gradient(to top, red, rgba(255, 255, 0, 0)); */
-  background: linear-gradient(rgba(14, 62, 134, 0), rgba(57, 158, 241, 0.692), rgb(57, 159, 241)), url('@/assets/bj/bj4.jpeg');
+  background: linear-gradient(rgba(14, 62, 134, 0), rgba(57, 158, 241, 0.692), rgb(57, 159, 241)), url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj4.jpeg');
   background-size: cover;
   background-position: center;
 }

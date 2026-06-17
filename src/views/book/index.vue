@@ -79,7 +79,7 @@ function onScroll(e: Event) {
   width: 100%;
   height: 450px;
   background-color: #000000;
-  background: url('@/assets/bj/bj14.jpg');
+  background: url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj14.jpg');
   box-shadow: var(--color-card-shadow-top);
   /* box-shadow-top: 0; */
   /* background-size: cover;
@@ -100,7 +100,7 @@ function onScroll(e: Event) {
   flex-direction: column;
   /* justify-content: center; */
   align-items: center;
-  background: url('@/assets/bj/bj13.jpg');
+  background: url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj13.jpg');
   box-shadow: var(--color-card-shadow-top);
   /* box-shadow-top: 0; */
   /* background-size: cover;

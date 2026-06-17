@@ -276,3 +276,36 @@ export const vueList = [
         "createTime": 1749375600000
     }
 ]
+
+export const uniappList = [
+    {
+        "id": 1,
+        "title": "uni-app 中如何实现跨平台适配？",
+        "content": "<p><strong>核心机制：</strong></p><p>uni-app 采用了一套代码多端运行的方案，通过条件编译和平台适配 API 来实现跨平台。</p><ul><li><strong>条件编译：</strong> 使用 <code>#ifdef</code> / <code>#ifndef</code> 指令对平台进行代码块级别的区分。</li><li><strong>条件编译语法：</strong> 在 js/ts 中使用 <code>// #ifdef</code> 注释，在 template 中使用 <code>&lt;!-- #ifdef --&gt;</code> 注释，在 style 中使用 <code>/* #ifdef */</code> 注释。</li><li><strong>常用平台标识：</strong> <code>APP-PLUS</code>（App端）、<code>H5</code>、<code>MP-WEIXIN</code>（微信小程序）、<code>MP-ALIPAY</code> 等。</li></ul><pre><code class=\"language-vue\">&lt;template&gt;\n  &lt;view&gt;\n    &lt;!-- #ifdef MP-WEIXIN --&gt;\n    &lt;button open-type=\"share\"&gt;微信分享&lt;/button&gt;\n    &lt;!-- #endif --&gt;\n    &lt;!-- #ifdef APP-PLUS --&gt;\n    &lt;button @click=\"nativeShare\"&gt;原生分享&lt;/button&gt;\n    &lt;!-- #endif --&gt;\n  &lt;/view&gt;\n&lt;/template&gt;</code></pre><p><strong>口语化回答：</strong></p><p>uni-app 的核心优势就是一套代码编译到多个平台。实现跨平台适配最关键的就是条件编译，通过 <code>#ifdef</code> 指令可以在不同平台写不同的代码块。比如微信小程序需要用到 open-type 分享，而 App 端需要调用原生分享 API，我们就可以用条件编译把这两块代码分开，打包的时候每个平台会自动选择自己需要的部分。</p>",
+        "createTime": 1749375600000
+    },
+    {
+        "id": 2,
+        "title": "uni-app 的生命周期有哪些？与 Vue 生命周期有何异同？",
+        "content": "<p><strong>uni-app 生命周期分为三种：</strong></p><ul><li><strong>应用生命周期（App.vue 中）：</strong> <code>onLaunch</code>（初始化完成）、<code>onShow</code>（显示）、<code>onHide</code>（隐藏）、<code>onError</code>（错误捕获）。</li><li><strong>页面生命周期：</strong> <code>onLoad</code>（页面加载）、<code>onShow</code>（页面显示）、<code>onReady</code>（渲染完成）、<code>onHide</code>（页面隐藏）、<code>onUnload</code>（页面卸载）、<code>onPullDownRefresh</code>、<code>onReachBottom</code>、<code>onShareAppMessage</code> 等。</li><li><strong>组件生命周期：</strong> 完全对齐 Vue 标准生命周期（<code>created</code>、<code>mounted</code>、<code>updated</code>、<code>destroyed</code> 等）。</li></ul><p><strong>与 Vue 的差异：</strong>uni-app 的页面生命周期是其特有的，Vue 标准生命周期在 uni-app 中同样有效但时序有所不同。例如 <code>onLoad</code> 早于 <code>created</code>，<code>onReady</code> 晚于 <code>mounted</code>。</p><p><strong>口语化回答：</strong></p><p>uni-app 有三层生命周期：应用级、页面级、组件级。应用级在 App.vue 中，页面级是 uni-app 特有的像 onLoad、onShow、onPullDownRefresh 这些，组件级就是 Vue 标准的那一套。需要注意的是它们的执行顺序：onLoad 先于 created 执行，onReady 在 mounted 之后。实际开发中，页面数据请求通常放在 onLoad 或 onReady 中，而不是 created。</p>",
+        "createTime": 1749375600000
+    },
+    {
+        "id": 3,
+        "title": "uni-app 中如何实现页面跳转与传参？",
+        "content": "<p><strong>页面跳转 API：</strong></p><ul><li><strong><code>uni.navigateTo</code>：</strong> 保留当前页面，跳转到新页面（最多保留 10 层），可返回。</li><li><strong><code>uni.redirectTo</code>：</strong> 关闭当前页面，跳转到新页面，不可返回。</li><li><strong><code>uni.switchTab</code>：</strong> 跳转到 tabBar 页面并关闭所有非 tabBar 页面。</li><li><strong><code>uni.reLaunch</code>：</strong> 关闭所有页面，打开一个新页面。</li><li><strong><code>uni.navigateBack</code>：</strong> 返回上一页或多级页面。</li></ul><p><strong>传参方式：</strong></p><p>通过 URL query 参数传递，在目标页面的 <code>onLoad(options)</code> 中通过 <code>options</code> 参数接收。</p><pre><code class=\"language-javascript\">// 跳转并传参\nuni.navigateTo({\n  url: '/pages/detail/detail?id=123&name=hello'\n});\n\n// 目标页面接收参数\nexport default {\n  onLoad(options) {\n    console.log(options.id);   // '123'\n    console.log(options.name); // 'hello'\n  }\n}</code></pre><p><strong>口语化回答：</strong></p><p>uni-app 的页面跳转和微信小程序基本一致。日常开发中最常用的是 navigateTo 和 redirectTo，区别是前者保留当前页可以返回，后者关闭当前页。参数传递是通过 URL query 字符串，在目标页面的 onLoad 方法的 options 参数中接收。需要注意的是 navigateTo 有层级限制，最多 10 层，超过的话就需要用 redirectTo 或者 reLaunch。</p>",
+        "createTime": 1749369600000
+    },
+    {
+        "id": 4,
+        "title": "uni-app 中如何调用原生能力（拍照、定位、支付等）？",
+        "content": "<p><strong>核心方案：</strong></p><ul><li><strong>uni-app 内置 API：</strong> uni-app 封装了大部分常用的原生能力，如 <code>uni.chooseImage</code>（选择图片）、<code>uni.getLocation</code>（获取位置）、<code>uni.requestPayment</code>（支付）等。</li><li><strong>条件编译 + 原生插件：</strong> 当内置 API 不满足需求时，可以通过条件编译在 App 端调用原生插件，在小程序端调用对应的 API。</li><li><strong>H5 端降级：</strong> 在 H5 端，部分原生能力不可用（如支付），需要做好降级处理。</li></ul><pre><code class=\"language-javascript\">// 选择并上传图片\nuni.chooseImage({\n  count: 1,\n  success: (res) => {\n    const tempFilePath = res.tempFilePaths[0];\n    uni.uploadFile({\n      url: '/api/upload',\n      filePath: tempFilePath,\n      name: 'file'\n    });\n  }\n});\n\n// 获取地理位置\nuni.getLocation({\n  type: 'gcj02',\n  success: (res) => {\n    console.log(res.latitude, res.longitude);\n  }\n});</code></pre><p><strong>口语化回答：</strong></p><p>uni-app 已经帮我们封装了大部分常用的原生 API，拍照用 chooseImage，定位用 getLocation，支付用 requestPayment，基本覆盖了日常开发需求。如果内置 API 不够用，可以通过条件编译在不同平台写不同的代码，或者引入原生插件。需要注意的是 H5 端的限制比较多，像支付、蓝牙这些能力需要用微信 JS-SDK 或支付宝 JSAPI 来实现。</p>",
+        "createTime": 1749369600000
+    },
+    {
+        "id": 5,
+        "title": "uni-app 的状态管理和数据共享方案有哪些？",
+        "content": "<p><strong>常用方案：</strong></p><ul><li><strong>Vuex / Pinia：</strong> 官方推荐，与 Vue 生态完全兼容。在 uni-app 中可以直接使用，适合中大型项目的全局状态管理。</li><li><strong>globalData：</strong> 在 App.vue 中定义 <code>globalData</code> 对象，通过 <code>getApp().globalData</code> 全局访问。轻量但无响应式，适合少量静态配置。</li><li><strong>uni.$emit / uni.$on：</strong> 基于事件总线的方式，适合跨页面/跨组件的消息通知，但需注意及时销毁事件监听防止内存泄漏。</li><li><strong>本地存储：</strong> <code>uni.setStorageSync</code> / <code>uni.getStorageSync</code>，适合需要持久化的数据（如 token、用户信息），但无响应式。</li></ul><pre><code class=\"language-javascript\">// 1. 使用 Pinia（推荐）\nimport { defineStore } from 'pinia';\nexport const useUserStore = defineStore('user', {\n  state: () => ({ token: '', userInfo: null })\n});\n\n// 2. 使用 globalData\nconst app = getApp();\nconsole.log(app.globalData.userInfo);\n\n// 3. 使用事件总线\nuni.$emit('dataUpdate', { key: 'value' });\nuni.$on('dataUpdate', (data) => { console.log(data); });</code></pre><p><strong>口语化回答：</strong></p><p>uni-app 的状态管理方案和 Vue 生态基本一致。首选是 Pinia 或 Vuex，它们和 Vue 的响应式系统深度集成，适合管理复杂状态。简单场景下可以用 globalData，它类似于微信小程序的全局变量，但缺点是改数据不会触发页面更新。跨页面的消息通知可以用 uni.$emit 和 uni.$on 事件总线。需要持久化的数据就用本地存储 Storage。实际项目中我一般是 Pinia + Storage 配合使用，Pinia 管运行状态，Storage 做持久化。</p>",
+        "createTime": 1749369600000
+    }
+]
