@@ -58,7 +58,7 @@ const PARENT_SCROLL_SPEED = 0.005 // 父组件滚动驱动螺旋的倍率
 const SCROLL_LIMIT = -5    // 螺旋向下移动的最低位置（负值，值越小允许下移越低）
 const SCROLL_CEILING = 17   // 螺旋向上移动的最高位置（正值，0 为初始位置）
 const TILT_ANGLE = 0        // 螺旋整体往后倾斜的角度（弧度）
-const PLACEHOLDER_COLOR = '#080808a1' // 图片加载前的占位颜色
+const PLACEHOLDER_COLOR = '#dddcdc67' // 图片加载前的占位颜色
 
 function initScene() {
   const container = containerRef.value!
@@ -88,6 +88,7 @@ function initScene() {
 function createSpiral() {
   spiralGroup = new THREE.Group()
   const loader = new THREE.TextureLoader()
+  loader.setCrossOrigin('anonymous')
 
   // 灰色占位纹理
   const placeholderCanvas = document.createElement('canvas')
@@ -169,11 +170,18 @@ function createSpiral() {
       metalness: 0.1,
     })
 
-    const texture = loader.load(props.images[img], () => {
-      material.map = texture
-      material.needsUpdate = true
-    })
-    texture.colorSpace = THREE.SRGBColorSpace
+  const texture = loader.load(
+    props.images[img], 
+    () => { 
+      material.map = texture 
+      material.needsUpdate = true 
+    },
+    undefined,
+    (err) => {
+      // console.error('纹理加载失败:', err)
+    }
+  )
+  texture.colorSpace = THREE.SRGBColorSpace
 
     const mesh = new THREE.Mesh(geometry, material)
     // 记录径向朝外方向，用于 hover 时偏移

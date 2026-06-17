@@ -66,8 +66,8 @@ const menuList = ref([
   { path: '/home', name: 'home', title: '首页', icon: homeIcon },
   { path: '/resources', name: 'resources', title: '资源', icon: ziyuanIcon },
   { path: '/book', name: 'book', title: '书单', icon: bookIcon },
-  { path: '/chat', name: 'chat', title: '论坛', icon: chatIcon },
-  { path: '/picture', name: 'picture', title: '摄影', icon: sheyingIcon },
+  // { path: '/chat', name: 'chat', title: '论坛', icon: chatIcon },
+  // { path: '/picture', name: 'picture', title: '摄影', icon: sheyingIcon },
   { path: '/note', name: 'note', title: '留言', icon: noteIcon },
   { path: '/my', name: 'my', title: '主页', icon: superManIcon },
 ])
@@ -83,6 +83,7 @@ const backLogin = () => {
 
 const handlePath = async (path, pageName) => {
   counterStore.index = pageName
+  console.log("跳转到",pageName)
   router.push(path)
   // if (route.path !== path) {
   //   await pageCountAPI({ userId: user.value.id, pageName })

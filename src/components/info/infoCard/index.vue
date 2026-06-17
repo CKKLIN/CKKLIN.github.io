@@ -57,8 +57,8 @@ import ziyuanIcon from "@/assets/icon/ziyuan.svg"
 import { ref, computed } from 'vue'
 const props = defineProps({
     userInfo: {
-        type: Array,
-        default: () => []
+        type: Object,
+        default: () => ({})
     }
 })
 const levelList = ref([

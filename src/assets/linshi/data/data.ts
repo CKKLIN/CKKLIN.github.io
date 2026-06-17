@@ -323,9 +323,16 @@ export const bookList = [
         "cover": "https://sky-lkc.oss-cn-beijing.aliyuncs.com/picture/book/30.jpg"
     }
 ]
-
 export function getBookCovers(count: number = bookList.length): string[] {
-    const covers = bookList.map(book => book.cover)
-    if (count <= covers.length) return covers.slice(0, count)
-    return Array.from({ length: count }, (_, i) => covers[i % covers.length])
+    const covers = bookList.map(book => {
+        // 获取毫秒级时间戳，除以 60000 并向下取整，得到“分钟级”时间戳
+        const minuteTimestamp = Math.floor(new Date().getTime() / 6000);
+        return `${book.cover}?t=${minuteTimestamp}`;
+    });
+
+    if (count <= covers.length) {
+        return covers.slice(0, count);
+    }
+    
+    return Array.from({ length: count }, (_, i) => covers[i % covers.length]);
 }

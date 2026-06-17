@@ -178,7 +178,6 @@ function onScroll(e: Event) {
   background: rgb(53, 53, 53);
   position: relative;
 }
-
 .top {
   position: sticky;
   top: 0;
@@ -187,8 +186,20 @@ function onScroll(e: Event) {
   display: flex;
   justify-content: center;
   z-index: 0;
-  background: linear-gradient(rgba(14, 62, 134, 0), rgba(54, 125, 184, 0.281), rgba(76, 153, 216, 0.507)), url('@/assets/bj/bj4.jpeg');
-
+  /* background-color: #dddcdc67; */
+  /* 背景图与渐变的叠加 */
+  background: 
+    linear-gradient(rgba(14, 62, 134, 0), rgba(54, 125, 184, 0.281), rgba(76, 153, 216, 0.507)), 
+    url('@/assets/bj/bj13.jpg');
+    
+  /* 【核心修改】cover 表示拉伸覆盖整个容器区域；第一层渐变不需要平铺/拉伸，所以写 no-repeat */
+  background-size: cover, cover; 
+  
+  /* 让背景图居中显示，避免被裁切到奇怪的位置 */
+  background-position: center center; 
+  
+  /* 防止滚动时出现背景图边缘 */
+  background-repeat: no-repeat, no-repeat; 
 }
 
 .title {

@@ -1,5 +1,5 @@
 <template>
-    <dic class="container">
+    <div class="container">
         <div class="header">
             <img class="icon" :src=tuijianIcon />
             <div class="text">{{ title }}</div>
@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-    </dic>
+    </div>
 </template>
 <script setup>
 import { ref } from "vue";

@@ -4,12 +4,11 @@
       <Header @path="handlePath" />
     </div>
     <div class="home-body">
-      <Transition name="slide" mode="out-in">
-        <router-view />
-      </Transition>
-      <!-- <div class="home-footer">
-        uihuihui
-      </div> -->
+      <router-view v-slot="{ Component }">
+        <Transition name="slide" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </router-view>
     </div>
   </div>
 </template>

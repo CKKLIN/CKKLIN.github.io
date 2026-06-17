@@ -145,15 +145,20 @@ const router = createRouter({
 const h5Paths = h5.map(route => route.path)
 
 // 移动端跳转到面经页面，非移动端跳转到首页
-router.beforeEach((to, _from, next) => {
+router.beforeEach((to, _from) => {
   const isH5 = to.matched.some(record => h5Paths.includes(record.path))
+  
   if (isMobileDevice()) {
-    if (!isH5) next('/mianJingh5')
-    else next()
+    // 移动端且不是 H5 页面，重定向到 H5 面经页
+    if (!isH5) return '/mianJingh5'
+    // 否则放行（也可以不写 return，默认放行）
   } else {
-    if (isH5) next('/home')
-    else next()
+    // 非移动端且是 H5 页面，重定向到首页
+    if (isH5) return '/home'
   }
+  
+  // 默认放行
+  return true 
 })
 
 export default router

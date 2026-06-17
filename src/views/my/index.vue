@@ -12,7 +12,7 @@
                     </div>
                 </div>
             </div>
-<div class="center-two"></div>
+            <div class="center-two"></div>
         </div>
     </div>
 </template>
@@ -35,8 +35,8 @@ const user = ref({
     createTime: "2022-01-01",
     level: 1,
     link: [
-        { id: 1, name: "github", url: "https://github.com/Mu-2" },
-        { id: 2, name: "twitter", url: "https://twitter.com/Mu_2_" },
+        { id: 1, name: "github", url: "https://github.com/CKKLIN" },
+        { id: 2, name: "CSDN", url: "https://blog.csdn.net/weixin_56181202?spm=1000.2115.3001.5343" },
     ],
 })
 </script>
@@ -47,6 +47,7 @@ const user = ref({
     background: #e6e6e6;
     border-radius: var(--border-radius-card);
 }
+
 .model-text {
     font-size: 15px;
     font-weight: 600;
@@ -103,6 +104,7 @@ const user = ref({
     gap: var(--gap);
 
 }
+
 .center-one {
     width: 100%;
     height: fit-content;

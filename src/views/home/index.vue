@@ -1,17 +1,9 @@
 <template>
   <div class="main">
+    <div class="double">
+      <doubleText></doubleText>
+    </div>
     <div class="bigBox">
-      <div class="welcome">
-        {{ displayedText }}
-        <div class="music">
-          <img v-show="isPlay" @click="togglePlay()" :src="player" class="music-spin" />
-          <img v-show="!isPlay" @click="togglePlay()" :src="pause" style="width: 100%; height: 100%" />
-          <audio ref="audioElement" :src="musicSrc" loop></audio>
-        </div>
-      </div>
-      <div class="top">
-        <wave />
-      </div>
       <div class="body">
         <div class="body-left">
           <div class="body-left-one">
@@ -53,6 +45,7 @@ import infoCard from '@/components/info/infoCard/index.vue'
 import createTime from '@/views/home/components/createTime/index.vue'
 import loading from '@/views/home/components/loading/index.vue'
 import TWSidebar from '@/components/sidebar/TWSidebar/index.vue'
+import doubleText from '@/components/doubleText/index.vue'
 
 const counterStore = useCounter()
 const isPlay = ref(true)
@@ -67,7 +60,7 @@ const user = ref({
   avatarUrl: ikun,
   title: 1223,
   look: 45654,
-  resources:234,
+  resources: 234,
 })
 
 const postList = ref(Array.from({ length: 5 }, () => ({
@@ -80,7 +73,7 @@ const postList = ref(Array.from({ length: 5 }, () => ({
 const musicSrc = ''
 
 const article = ref([
-   {
+  {
     id: 1,
     title: '2026年全球科技峰会在沪开幕，AI与量子计算成焦点议题',
     time: '2026-05-28',
@@ -104,30 +97,30 @@ const article = ref([
     time: '2026-05-18',
     img: 'https://picsum.photos/800/600?random=4'
   },
-//   {
-//     id: 5,
-//     title: '92号汽油价格调整：有望重返“7元时代”缓解车主压力',
-//     time: '2026-05-15',
-//     img: 'https://picsum.photos/800/600?random=5'
-//   },
-//   {
-//     id: 6,
-//     title: '智利复活节岛遭遇山火，珍贵石像群受损引发全球关注',
-//     time: '2026-05-10',
-//     img: 'https://picsum.photos/800/600?random=6'
-//   },
-//   {
-//     id: 7,
-//     title: '美国芯片巨头一夜暴跌近14%，全球半导体市场震荡',
-//     time: '2026-05-05',
-//     img: 'https://picsum.photos/800/600?random=7'
-//   },
-//   {
-//     id: 8,
-//     title: '央行公开市场净回笼5940亿元，货币政策走向引热议',
-//     time: '2026-05-01',
-//     img: 'https://picsum.photos/800/600?random=8'
-//   },
+  //   {
+  //     id: 5,
+  //     title: '92号汽油价格调整：有望重返“7元时代”缓解车主压力',
+  //     time: '2026-05-15',
+  //     img: 'https://picsum.photos/800/600?random=5'
+  //   },
+  //   {
+  //     id: 6,
+  //     title: '智利复活节岛遭遇山火，珍贵石像群受损引发全球关注',
+  //     time: '2026-05-10',
+  //     img: 'https://picsum.photos/800/600?random=6'
+  //   },
+  //   {
+  //     id: 7,
+  //     title: '美国芯片巨头一夜暴跌近14%，全球半导体市场震荡',
+  //     time: '2026-05-05',
+  //     img: 'https://picsum.photos/800/600?random=7'
+  //   },
+  //   {
+  //     id: 8,
+  //     title: '央行公开市场净回笼5940亿元，货币政策走向引热议',
+  //     time: '2026-05-01',
+  //     img: 'https://picsum.photos/800/600?random=8'
+  //   },
 ]);
 
 const typeWriter = () => {
@@ -155,12 +148,33 @@ onMounted(() => {
 <style scoped>
 .main {
   width: 100%;
-  height: 100%;
-  overflow: auto;
+  height: 100vh;
+  overflow-y: auto;
   position: relative;
-  background-image: url(@/assets/bj/header.jpg);
-  background-size: cover;
   animation: slideDown 1.5s ease-in-out forwards;
+}
+
+.double {
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: yellowgreen;
+  z-index: 0;
+  cursor: default; 
+}
+
+.bigBox {
+  position: relative;
+  width: 100%;
+  height: fit-content;
+  z-index: 1;
+  
+  display: flex;
+  flex-direction: column;
+  /* padding-top: 100vh; */
+  background-color: #ce6d1352;
 }
 
 @keyframes slideDown {
@@ -176,7 +190,7 @@ onMounted(() => {
 .welcome {
   max-width: 300px;
   height: fit-content;
-  background-color: rgba(255, 255, 255, 0.336);
+  background-color: rgba(160, 9, 9, 0.945);
   position: fixed;
   margin-left: calc(50% - 150px);
   margin-top: -8%;
@@ -219,14 +233,7 @@ onMounted(() => {
   }
 }
 
-.bigBox {
-  width: 100%;
-  height: fit-content;
-  z-index: 111;
-  display: flex;
-  flex-direction: column;
-  padding-top: 20%;
-}
+
 
 .top {
   width: 100%;
