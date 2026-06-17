@@ -18,19 +18,23 @@
         </cardAnimation>
     </div>
 </template>
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import cardAnimation from '@/components/cardAnimation/index.vue'
-import { bookList3 } from '@/assets/linshi/data/data'
+import { loadBooks } from '@/utils/dataLoader'
 
 const containerRef = ref()
+const animationItems = ref([] as any[])
 
-const animationItems = bookList3.map(b => ({
-    title: b.name,
-    cover: b.cover,
-    author: b.author,
-    desc: b.introduction,
-}))
+onMounted(async () => {
+    const { bookList3 } = await loadBooks()
+    animationItems.value = bookList3.map(b => ({
+        title: b.name,
+        cover: b.cover,
+        author: b.author,
+        desc: b.introduction,
+    }))
+})
 </script>
 <style scoped>
 .card-cover {

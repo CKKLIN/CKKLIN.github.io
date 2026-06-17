@@ -147,7 +147,7 @@ onMounted(() => {
   height: 100vh;
   overflow-y: auto;
   position: relative;
-  background-image: url(@/assets/bj/header.jpg);
+  background-image: url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/header.jpg');
   background-size: cover;
   animation: slideDown 1.5s ease-in-out forwards;
 }

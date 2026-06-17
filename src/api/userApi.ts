@@ -1,7 +1,7 @@
-import usersData from '@/assets/linshi/data/users.json'
+import { loadUsers } from '@/utils/dataLoader'
 
 export function fetchUsers() {
-    return Promise.resolve(usersData)
+    return loadUsers()
 }
 
 export function registerUser(_data: { name: string; password: string; level: number; role: number; collectList: any[] }) {

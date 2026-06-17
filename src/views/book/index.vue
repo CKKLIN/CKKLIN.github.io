@@ -2,7 +2,7 @@
   <div class="container" ref="containerRef" @scroll="onScroll">
     <div class="top">
       <titleCard class="title"></titleCard>
-      <Spiraly ref="spiralRef" class="Spiraly" :images="bookCovers"></Spiraly>
+      <Spiraly v-if="bookCovers.length" ref="spiralRef" class="Spiraly" :images="bookCovers"></Spiraly>
     </div>
     <div class="body">
       <div class="center">
@@ -12,7 +12,7 @@
       <div class="body-two">
         <titleCard class="body-two-title"></titleCard>
         <titleCard class="two-title"></titleCard>
-        <cardAnimation :items="animationItems" :scroller="containerRef" trigger-start="top top" style="width: 100%;"
+        <cardAnimation v-if="animationItems.length" :items="animationItems" :scroller="containerRef" trigger-start="top top" style="width: 100%;"
           trigger-end="bottom bottom" scroll-height="300vh" :converge-speed="0.15" sticky-top="0"
           container-height="100vh">
           <template #front="{ item }">
@@ -44,22 +44,26 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
 import Spiraly from '@/components/3DSpiralGallery/index.vue'
 import titleCard from '@/views/book/components/title/index.vue'
 import card from '@/views/book/components/card/index.vue'
 import cardAnimation from '@/components/cardAnimation/index.vue'
-import { bookList3, getBookCovers } from '@/assets/linshi/data/data'
+import { loadBooks, getBookCovers } from '@/utils/dataLoader'
+import { ref } from 'vue'
 
-const bookCovers = getBookCovers(120)
+const bookCovers = ref<string[]>([])
+const animationItems = ref<any[]>([])
 
-const animationItems = bookList3.map(b => ({
-  title: b.name,
-  cover: b.cover,
-  author: b.author,
-  desc: b.introduction,
-  backColor: b.backColor,
-}))
+getBookCovers(120).then(covers => { bookCovers.value = covers })
+loadBooks().then(({ bookList3 }) => {
+  animationItems.value = bookList3.map(b => ({
+    title: b.name,
+    cover: b.cover,
+    author: b.author,
+    desc: b.introduction,
+    backColor: b.backColor,
+  }))
+})
 
 const spiralRef = ref()
 const containerRef = ref<HTMLElement>()
@@ -190,7 +194,7 @@ function onScroll(e: Event) {
   /* 背景图与渐变的叠加 */
   background: 
     linear-gradient(rgba(14, 62, 134, 0), rgba(54, 125, 184, 0.281), rgba(76, 153, 216, 0.507)), 
-    url('@/assets/bj/bj13.jpg');
+    url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj13.jpg');
     
   /* 【核心修改】cover 表示拉伸覆盖整个容器区域；第一层渐变不需要平铺/拉伸，所以写 no-repeat */
   background-size: cover, cover; 

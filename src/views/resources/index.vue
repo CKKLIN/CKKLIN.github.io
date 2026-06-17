@@ -21,11 +21,17 @@
 <script lang="ts" setup>
 import memoCard from '@/components/card/memoCard/index.vue'
 import zoomCard from '@/components/card/zoomCard/index.vue'
-import { ref } from 'vue'
-import resourceData from '@/assets/linshi/data/resources.json'
+import { ref, onMounted } from 'vue'
+import { loadResources } from '@/utils/dataLoader'
 
-const headers = ref(resourceData.headers)
-const cardList = resourceData.cards
+const headers = ref<any[]>([])
+const cardList = ref<any[]>([])
+
+onMounted(async () => {
+    const data = await loadResources()
+    headers.value = data.headers
+    cardList.value = data.cards
+})
 </script>
 <style scoped>
 .container {

@@ -25,15 +25,16 @@ import mainjing from '../mainjing/index.vue'
 
 .body {
     width: 100%;
-    height: calc(100% - 90px);
+    height: calc(100% - 70px);
     overflow: auto;
+    /* background-color: yellowgreen; */
 }
 
 .actionBar {
     width: 92%;
-    height: 72px;
+    height: 60px;
     border-radius: 40px;
-    margin-bottom: 12px;
+    margin-bottom: 2px;
     /* background: rgba(255, 255, 255, 0.2); */
     backdrop-filter: blur(24px) saturate(200%);
     -webkit-backdrop-filter: blur(24px) saturate(200%);

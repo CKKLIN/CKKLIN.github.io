@@ -32,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue'
-import { bookList } from '@/assets/linshi/data/data'
+import { ref, onUnmounted, onMounted } from 'vue'
+import { loadBooks } from '@/utils/dataLoader'
 
 interface Book {
     id: number | string
@@ -43,7 +43,11 @@ interface Book {
     cover?: string
 }
 
-const books: Book[] = bookList
+const books = ref<Book[]>([])
+onMounted(async () => {
+    const data = await loadBooks()
+    books.value = data.bookList
+})
 const listRef = ref<HTMLElement>()
 const canScrollLeft = ref(false)
 const canScrollRight = ref(true)

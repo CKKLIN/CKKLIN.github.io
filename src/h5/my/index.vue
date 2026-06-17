@@ -34,7 +34,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { vueList } from '@/assets/linshi/data/h5/mainjing'
+import { loadMainjing } from '@/utils/dataLoader'
 import { useTokenStore } from '@/stores/token'
 import { fetchUsers, updateUser } from '@/api/userApi'
 import { ref, computed, onMounted } from 'vue'
@@ -87,7 +87,7 @@ const syncToServer = async () => {
 const loadFavs = async () => {
     const userId = localStorage.getItem('userId')
     if (!userId) return
-    const users = await fetchUsers()
+    const [users, { vueList }] = await Promise.all([fetchUsers(), loadMainjing()])
     currentUser.value = users.find(u => u.id === Number(userId)) || null
     const ids = getUserCollectIds()
     favList.value = vueList.filter(v => ids.includes(v.id))

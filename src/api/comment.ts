@@ -1,7 +1,7 @@
-import commentsData from '@/assets/linshi/data/comments.json'
+import { loadComments } from '@/utils/dataLoader'
 
 export function getCommentListAPI() {
-  return Promise.resolve(commentsData)
+  return loadComments()
 }
 
 export function addCommentAPI(_comment: { imageUrl: string; name: string; comment: string; good: boolean; createTime: string }) {

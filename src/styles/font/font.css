@@ -1,21 +1,27 @@
+/* 中文字体定义 — 建议将 TTF 转换为 WOFF2（体积可减 50-70%），并做子集化 */
 @font-face {
   font-family: "XiangJiaoGuiPuLingGanTi";
   src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/XiangJiaoGuiPuLingGanTi-2.ttf");
+  font-display: swap;
 }
 @font-face {
   font-family: "YuWoErYanNiZuiKeAi-2";
   src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/YuWoErYanNiZuiKeAi-2.ttf");
+  font-display: swap;
 }
 
 /* @font-face {
   font-family: "AaRenJianRenAiYouQianHua-2";
   src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/AaRenJianRenAiYouQianHua-2.ttf");
+  font-display: swap;
 } */
 @font-face {
   font-family: "ZiHun144Hao-LangYuanTi-2";
   src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/ZiHun144Hao-LangYuanTi-2.ttf");
+  font-display: swap;
 }
 @font-face {
   font-family: "RuiZiJiJiaHongHuangChaoJiLiang";
   src: url("https://sky-lkc.oss-cn-beijing.aliyuncs.com/model/font/RuiZiJiJiaHongHuangChaoJiLiang.ttf");
+  font-display: swap;
 }

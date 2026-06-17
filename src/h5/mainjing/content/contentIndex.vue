@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
-import { vueList, uniappList } from '@/assets/linshi/data/h5/mainjing'
+import { loadMainjing } from '@/utils/dataLoader'
 import { fetchUsers, updateUser } from '@/api/userApi'
 import { computed, ref, onMounted } from 'vue'
 
@@ -32,8 +32,14 @@ const props = defineProps({
 })
 
 const category = computed(() => (route.query.category as string) || 'vue')
-const categoryTag = computed(() => category.value === 'uniapp' ? 'UniApp' : 'Vue')
-const dataList = computed(() => category.value === 'uniapp' ? uniappList : vueList)
+interface DataItem {
+  id: number;
+  title: string;
+  content: string;
+  createTime: number;
+}
+const categoryTag = ref()
+const dataList = ref<DataItem[]>([]);
 
 // 假设你的用户类型长这样
 interface User {
@@ -46,6 +52,23 @@ interface User {
   collectList?: { id: number; collect: string; }[]; // 注意这里可能有可选属性
 }
 
+onMounted(async ()=>{
+    const data = await loadMainjing()
+    if(category.value=='vue'){
+        categoryTag.value="Vue"
+        dataList.value=data.vueList
+    }else if(category.value=='uniapp'){
+        categoryTag.value="UniApp"
+        dataList.value=data.uniappList
+    }else if(category.value=='react'){
+        categoryTag.value="React"
+        dataList.value=data.reactList
+    }else if(category.value=='微信小程序'){
+        categoryTag.value="微信小程序"
+        dataList.value=data.wxAppList
+    }
+})
+
 // 明确告诉 TypeScript，这个 ref 的值可以是 User 对象，也可以是 null
 const currentUser = ref<User | null>(null); 
 
@@ -53,7 +76,7 @@ const loadUser = async () => {
     const userId = localStorage.getItem('userId')
     if (!userId) return
     const users = await fetchUsers()
-    currentUser.value = users.find(u => u.id === Number(userId)) || null
+    currentUser.value = users.find((u: User) => u.id === Number(userId)) || null
     isFav.value = getCollectIds().includes(Number(props.id))
 }
 
@@ -199,6 +222,7 @@ const onTouchEnd = (e: TouchEvent) => {
     align-items: center;
     justify-content: center;
     padding: var(--padding-ssm);
+    font-family: "ZiHun144Hao-LangYuanTi-2";
 }
 
 .body {

@@ -309,3 +309,237 @@ export const uniappList = [
         "createTime": 1749369600000
     }
 ]
+
+export const reactList=[
+  {
+    "id": 1,
+    "title": "React 中 State 和 Props 的核心区别是什么？",
+    "content": "<p>在 React 的组件化开发中，State（状态）和 Props（属性）是驱动视图更新的两大核心数据源，但它们在数据来源、可变性以及使用场景上有着本质的区别。</p><h3>核心区别</h3><ul><li><strong>数据来源与流向</strong>：Props 是由父组件传递给子组件的数据，遵循严格的单向数据流（从父到子）；而 State 是组件内部自己定义并维护的数据。</li><li><strong>可变性</strong>：Props 对于子组件来说是只读的，子组件绝不能直接修改接收到的 Props；State 则是组件内部可变的，通过状态更新机制（如 <code>setState</code> 或 <code>useState</code> 的 setter 函数）修改后，会触发组件的重新渲染。</li><li><strong>使用场景</strong>：Props 用于配置组件的行为和展示内容，使组件具有复用性；State 用于管理组件内部随用户交互或网络请求而变化的动态数据。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 父组件传递 Props\nfunction ParentComponent() {\n  const [count, setCount] = useState(0);\n  return &lt;ChildComponent count={count} setCount={setCount} /&gt;;\n}\n\n// 子组件接收 Props 并使用内部 State\nfunction ChildComponent({ count, setCount }) {\n  const [localMsg, setLocalMsg] = useState('Hello'); // 内部状态\n  \n  //  错误：绝不能直接修改 Props\n  // count = count + 1; \n  \n  //  正确：通过父组件传递的函数来修改数据（子传父模式）\n  const handleClick = () =&gt; setCount(count + 1);\n  \n  return (\n    &lt;div&gt;\n      &lt;p&gt;父组件传来的 count: {count}&lt;/p&gt;\n      &lt;button onClick={handleClick}&gt;+1&lt;/button&gt;\n    &lt;/div&gt;\n  );\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，State 和 Props 的核心区别我一般从三个维度来记。第一是来源，Props 是别人（父组件）给的，State 是自己内部定义的。第二是可变性，Props 是只读的，子组件绝对不能去修改它，如果非要改，得让父组件传一个修改函数过来，也就是我们常说的‘子传父’模式；而 State 是可以通过 setState 或者 useState 的 setter 去修改的，而且一改就会触发重新渲染。第三是用途，Props 主要是用来配置组件的，让组件像积木一样可以复用；State 则是用来存组件内部那些动态变化的数据，比如表单输入的值、接口拉取的数据等。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 2,
+    "title": "setState 是同步还是异步的？",
+    "content": "<p>在 React 中，<code>setState</code> 的执行机制取决于它所处的上下文环境，不能简单地用同步或异步来概括。</p><h3>核心机制</h3><ul><li><strong>批处理更新（表现为异步）</strong>：在 React 事件处理函数（如 onClick）和生命周期方法中，<code>setState</code> 是异步的。React 会将多次 <code>setState</code> 合并为一次更新，以提升性能。此时在 <code>setState</code> 之后立即读取 state，拿到的依然是旧值。</li><li><strong>同步更新</strong>：在原生事件监听器（如 <code>addEventListener</code>）、<code>setTimeout</code>、<code>Promise.then</code> 等异步代码中，<code>setState</code> 是同步的，状态会立即更新。</li><li><strong>函数式更新</strong>：为了解决异步更新带来的旧值问题，推荐使用函数式更新：<code>setState(prevState =&gt; ({ count: prevState.count + 1 }))</code>。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">handleClick = () =&gt; {\n  // 在 React 事件处理函数中，表现为异步\n  this.setState({ count: this.state.count + 1 });\n  console.log(this.state.count); // 打印旧值\n\n  // 函数式更新，安全地基于上一次状态计算\n  this.setState(prevState =&gt; ({ count: prevState.count + 1 }));\n}\n\nhandleNativeClick = () =&gt; {\n  document.getElementById('btn').addEventListener('click', () =&gt; {\n    // 在原生事件中，表现为同步\n    this.setState({ count: this.state.count + 1 });\n    console.log(this.state.count); // 打印新值\n  });\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，setState 到底是同步还是异步，得看它在哪执行。在 React 自己的事件处理函数和生命周期里，它是异步的，React 会把多次 setState 攒在一起批量更新，所以紧接着打印 state 拿到的还是旧值。但如果是在 setTimeout 或者原生 DOM 事件里，它就是同步的。为了解决异步更新时拿不到最新值的问题，我平时都会用函数式的写法，比如 setState(prevState =&gt; ...)，这样不管在什么环境下都能拿到上一次的最新状态，最安全。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 3,
+    "title": "什么是 React Fiber？它解决了什么问题？",
+    "content": "<p>Fiber 是 React 16 引入的全新协调引擎（Reconciliation），它彻底重构了 React 的渲染机制，是实现现代 React 高性能的核心基石。</p><h3>核心作用与解决的问题</h3><ul><li><strong>可中断的异步渲染</strong>：在 React 15 及之前，组件树的递归更新是同步的，一旦组件树过深，就会长时间占用主线程，导致用户交互卡顿。Fiber 将渲染工作拆分成了一个个小的工作单元（Fiber 节点），利用浏览器的空闲时间分片执行，实现了可中断、可恢复的异步渲染。</li><li><strong>优先级调度</strong>：Fiber 架构允许 React 为不同的更新分配不同的优先级。例如，用户的点击、输入等高优先级交互可以打断低优先级的数据渲染，保证页面的流畅度。</li><li><strong>数据结构重构</strong>：Fiber 节点本质上是一个 JavaScript 对象，包含了组件类型、状态、DOM 引用以及指向子节点、兄弟节点、父节点的指针，将原本的树形结构转换为了链表结构，使得遍历和中断变得更加容易。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// Fiber 节点的简化数据结构\nconst fiberNode = {\n  tag: 0,             // 组件类型标识\n  type: 'div',        // 对应的 DOM 节点或组件函数\n  stateNode: null,    // 真实的 DOM 节点引用\n  memoizedState: null,// 当前组件的 state\n  child: null,        // 指向第一个子 Fiber\n  sibling: null,      // 指向下一个兄弟 Fiber\n  return: null,       // 指向父 Fiber\n  pendingProps: {},   // 新的 props\n};</code></pre><h3>口语化回答示例</h3><p>“面试官您好，Fiber 是 React 16 引入的底层渲染引擎。在 React 15 的时候，渲染是一口气同步完成的，如果页面组件太多，就会阻塞主线程，导致页面卡顿。Fiber 最大的贡献就是把渲染任务拆成了一个个小的工作单元，利用浏览器的空闲时间分片执行，实现了可中断的异步渲染。而且它把原来的树形结构改成了链表结构，这样不仅能随时暂停和恢复，还能给不同的更新排优先级，比如用户的点击操作优先级最高，可以打断普通的数据渲染，大大提升了用户体验。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 4,
+    "title": "React 中有哪些常用的性能优化手段？",
+    "content": "<p>在大型 React 应用中，避免不必要的组件重渲染是性能优化的核心目标。React 提供了多种机制来辅助开发者进行性能调优。</p><h3>核心优化手段</h3><ul><li><strong>React.memo</strong>：用于包裹函数组件，它会对传入的 Props 进行浅比较，如果 Props 没有变化，则跳过该组件的重渲染。</li><li><strong>useMemo / useCallback</strong>：useMemo 用于缓存计算结果，useCallback 用于缓存函数引用。它们通常配合 React.memo 使用，防止因为父组件重渲染导致子组件接收到新的引用类型 Props 而触发无效更新。</li><li><strong>shouldComponentUpdate / PureComponent</strong>：在类组件中，可以通过重写 shouldComponentUpdate 返回 false 来阻止更新，或者直接继承 React.PureComponent 实现 Props 和 State 的浅比较。</li><li><strong>代码分割（Code Splitting）</strong>：使用 <code>React.lazy</code> 结合 <code>Suspense</code> 实现路由级别或组件级别的按需加载，减小首屏打包体积。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">import React, { memo, useMemo, useCallback } from 'react';\n\nconst ChildComponent = memo(({ data, onClick }) =&gt; {\n  console.log('ChildComponent rendered');\n  return &lt;button onClick={onClick}&gt;{data}&lt;/button&gt;;\n});\n\nfunction ParentComponent() {\n  const [count, setCount] = useState(0);\n  \n  // 缓存计算结果\n  const computedData = useMemo(() =&gt; `Count is ${count}`, [count]);\n  // 缓存函数引用\n  const handleClick = useCallback(() =&gt; setCount(c =&gt; c + 1), []);\n\n  return &lt;ChildComponent data={computedData} onClick={handleClick} /&gt;;\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，React 性能优化我主要从四个方面入手。首先是 React.memo，它可以对函数组件做 Props 浅比较，Props 没变就不重新渲染。但光用 memo 还不够，因为父组件每次重渲染都会生成新的函数和对象引用，所以必须配合 useMemo 和 useCallback 来缓存值和函数。对于类组件，我会用 PureComponent 或者 shouldComponentUpdate。另外在工程化层面，我会用 React.lazy 和 Suspense 做代码分割和路由懒加载，减小首屏体积。总的来说，优化的核心就是减少不必要的重渲染和减小包体积。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 5,
+    "title": "什么是 React 的合成事件（SyntheticEvent）？",
+    "content": "<p>React 实现了一套自己的事件系统，称为合成事件（Synthetic Event）。它是原生浏览器事件的跨浏览器兼容包装器。</p><h3>核心特性</h3><ul><li><strong>事件委托机制</strong>：React 不会将事件处理函数绑定到具体的 DOM 节点上，而是将所有事件统一委托到根容器（React 17+ 绑定到 <code>root</code> 容器，早期版本绑定到 <code>document</code>）上。当事件冒泡到根节点时，React 再根据内部映射分发到对应的组件处理函数。</li><li><strong>跨浏览器兼容</strong>：合成事件抹平了不同浏览器之间的事件差异，提供了与原生事件相同的接口（如 <code>stopPropagation</code> 和 <code>preventDefault</code>），开发者无需再写大量的浏览器兼容代码。</li><li><strong>事件池与清空机制</strong>：在 React 16 及之前，合成事件对象会被放入事件池中，事件处理函数执行完毕后，对象的属性会被清空。如果需要在异步代码中访问事件对象，必须调用 <code>e.persist()</code>。（注：React 17 移除了事件池机制，不再需要手动调用 persist）。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">function InputComponent() {\n  const handleChange = (e) =&gt; {\n    // 阻止事件冒泡\n    e.stopPropagation();\n    \n    // 在 React 16 中，如果需要异步访问事件对象\n    e.persist();\n    setTimeout(() =&gt; {\n      console.log(e.target.value); \n    }, 1000);\n  };\n\n  return &lt;input onChange={handleChange} /&gt;;\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，React 的合成事件其实是原生事件的一层封装。它最大的特点是事件委托，React 不会把事件绑在具体的 DOM 上，而是统一绑在根节点上，事件冒泡上来后再分发，这样能减少内存消耗。其次它抹平了浏览器的差异，我们写代码不用再去管 IE 还是 Chrome 的区别了。另外在 React 16 时代，合成事件对象在函数执行完就会被清空，如果在 setTimeout 里要用，必须调 e.persist()。不过 React 17 已经把这个事件池机制去掉了，现在可以直接在异步里用了。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 6,
+    "title": "React Hooks 的使用规则有哪些？为什么有这些规则？",
+    "content": "<p>React Hooks 为函数组件带来了状态和生命周期等特性，但它有一套严格的使用规则，违反这些规则会导致应用崩溃或出现难以排查的 Bug。</p><h3>核心规则</h3><ul><li><strong>只在最顶层使用 Hook</strong>：不要在循环、条件语句（if/else）或嵌套函数中调用 Hook。Hook 必须在每次渲染时以完全相同的顺序被调用。</li><li><strong>只在 React 函数组件或自定义 Hook 中调用</strong>：不要在普通的 JavaScript 函数或类组件中使用 Hook。</li></ul><h3>底层原因</h3><p>React 内部是通过一个链表（或数组）来按顺序管理组件中的多个 Hook 状态的。如果在条件语句中调用 Hook，当条件发生变化时，Hook 的调用顺序就会被打乱，导致 React 将状态错误地映射到不同的 Hook 上，从而引发状态错乱。</p><h3>代码示例</h3><pre><code class=\"language-javascript\">function BadComponent({ isLogin }) {\n  //  错误：不能在条件语句中调用 Hook\n  if (isLogin) {\n    const [user, setUser] = useState(null); \n  }\n  \n  //  正确：始终在最顶层调用\n  const [user, setUser] = useState(null);\n  const [token, setToken] = useState('');\n  \n  if (isLogin) {\n    // 可以在条件语句中使用 Hook 返回的值\n    console.log(user);\n  }\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，Hooks 的规则就两条：第一，只能在最顶层调用，不能放在 if、for 或者嵌套函数里；第二，只能在函数组件或自定义 Hook 里用。至于为什么，是因为 React 底层是用一个链表按顺序来管理每个 Hook 的状态的。如果你把 Hook 写在 if 里面，这次渲染走了 if，下次没走，调用顺序就乱了，React 就会把状态对错位，导致各种诡异的 Bug。所以平时开发我都会装 eslint-plugin-react-hooks 这个插件，它能在写代码时直接帮我检查这些规则。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 7,
+    "title": "useEffect 和 useLayoutEffect 有什么区别？",
+    "content": "<p>这两个 Hook 的函数签名完全一致，但它们的执行时机有着本质的区别，适用于不同的场景。</p><h3>核心区别</h3><ul><li><strong>useEffect</strong>：是异步执行的。它会在浏览器完成绘制（Paint）之后延迟执行，不会阻塞浏览器的渲染过程。适用于数据请求、订阅事件、添加定时器等不需要立即操作 DOM 的副作用。</li><li><strong>useLayoutEffect</strong>：是同步执行的。它会在 DOM 变更之后、浏览器绘制之前同步执行。这会阻塞浏览器的渲染，但如果需要在浏览器绘制前同步读取或修改 DOM（如测量元素尺寸、防止页面闪烁），就必须使用它。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">function Tooltip({ text }) {\n  const ref = useRef(null);\n  \n  //  使用 useLayoutEffect 防止 tooltip 位置闪烁\n  useLayoutEffect(() =&gt; {\n    const { width } = ref.current.getBoundingClientRect();\n    ref.current.style.left = `calc(50% - ${width / 2}px)`;\n  }, [text]);\n\n  //  普通副作用使用 useEffect\n  useEffect(() =&gt; {\n    console.log('Tooltip rendered');\n  }, [text]);\n\n  return &lt;div ref={ref}&gt;{text}&lt;/div&gt;;\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，这两个 Hook 最大的区别就是执行时机。useEffect 是在浏览器画完页面之后异步执行的，不会阻塞渲染，所以我们平时发请求、加定时器都用它。而 useLayoutEffect 是在 DOM 更新后、浏览器绘制前同步执行的，它会阻塞渲染。一般只有在需要测量 DOM 尺寸，或者修改 DOM 样式防止页面闪烁的时候才会用 useLayoutEffect。日常开发中 95% 的场景都用 useEffect 就够了，只有遇到视觉闪烁问题时才考虑换成 useLayoutEffect。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 8,
+    "title": "React 的虚拟 DOM（Virtual DOM）原理是什么？",
+    "content": "<p>虚拟 DOM 是 React 的核心机制之一，它本质上是用 JavaScript 对象来描述真实的 DOM 树结构。</p><h3>核心原理</h3><ul><li><strong>状态映射</strong>：React 将 UI 的状态映射为一棵虚拟 DOM 树。当状态发生变化时，会生成一棵新的虚拟 DOM 树。</li><li><strong>Diff 算法</strong>：React 通过 Diff 算法对比新旧两棵虚拟 DOM 树，找出最小差异集合。</li><li><strong>批量更新真实 DOM</strong>：将差异集合一次性应用到真实的 DOM 上，避免了频繁操作真实 DOM 带来的高昂性能开销。</li></ul><h3>Diff 策略（O(n) 复杂度）</h3><ul><li><strong>逐层比较</strong>：只比较同一层级的节点，不跨层级移动。</li><li><strong>类型判断</strong>：如果节点类型不同，直接销毁旧树并重建新树。</li><li><strong>Key 的作用</strong>：在列表渲染中，<code>key</code> 是节点的唯一标识。React 通过 key 来判断哪些节点是新增、删除或移动的，从而极大提升列表更新的性能。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 虚拟 DOM 的简化表示\nconst vdom = {\n  type: 'div',\n  props: { className: 'container' },\n  children: [\n    { type: 'p', props: null, children: ['Hello React'] }\n  ]\n};\n\n// 列表渲染必须绑定唯一 key\nfunction UserList({ users }) {\n  return (\n    &lt;ul&gt;\n      {users.map(user =&gt; (\n        &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;\n      ))}\n    &lt;/ul&gt;\n  );\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，虚拟 DOM 其实就是用 JS 对象来模拟真实的 DOM 树。它的核心价值不在于‘比直接操作 DOM 快’，而在于提供了跨平台能力和一套高效的更新策略。当状态变化时，React 会生成新的虚拟 DOM，然后通过 Diff 算法找出差异，最后批量更新真实 DOM。Diff 算法的核心是逐层比较和类型判断，而在列表渲染时，key 的作用至关重要，它能帮 React 快速识别哪些节点变了、哪些只是换了位置，从而避免不必要的重新创建和销毁。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 9,
+    "title": "React 中的 forwardRef 是什么？有什么使用场景？",
+    "content": "<p>在 React 中，ref 默认只能传递给类组件，或者带有 DOM 节点的函数组件。如果想在父组件中获取子函数组件内部的 DOM 节点或调用其方法，就需要使用 <code>forwardRef</code>。</p><h3>核心机制</h3><ul><li><strong>转发 Ref</strong>：<code>forwardRef</code> 是一个高阶组件，它接收一个渲染函数，并将 <code>ref</code> 作为第二个参数传递给该函数。</li><li><strong>结合 useImperativeHandle</strong>：通常配合 <code>useImperativeHandle</code> 使用，可以自定义暴露给父组件的实例值（方法或属性），而不是直接暴露整个 DOM 节点，从而提高封装性。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">import { forwardRef, useImperativeHandle, useRef } from 'react';\n\nconst CustomInput = forwardRef((props, ref) => {\n  const inputRef = useRef(null);\n  \n  // 自定义暴露给父组件的方法\n  useImperativeHandle(ref, () => ({\n    focus: () => inputRef.current.focus(),\n    clear: () => { inputRef.current.value = ''; }\n  }));\n\n  return &lt;input ref={inputRef} {...props} /&gt;;\n});\n\n// 父组件调用\nfunction Parent() {\n  const ref = useRef();\n  return &lt;CustomInput ref={ref} /&gt;;\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，forwardRef 主要是为了解决函数组件不能直接接收 ref 的问题。比如我封装了一个输入框组件，父组件需要在某个时刻让它自动聚焦，就可以用 forwardRef 把 ref 传进去。实际开发中，我还会配合 useImperativeHandle 一起用，这样父组件拿到的 ref 只能调用我规定好的方法（比如 focus、clear），而不是拿到整个 DOM 节点，这样组件的封装性更好，也更安全。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 10,
+    "title": "useReducer 和 useState 有什么区别？如何选择？",
+    "content": "<p>useReducer 是 React 提供的一个 Hook，它借鉴了 Redux 的思想，适用于复杂的状态管理场景。</p><h3>核心区别</h3><ul><li><strong>useState</strong>：适合简单的、独立的状态。每次更新直接传入新值或更新函数，逻辑直观。</li><li><strong>useReducer</strong>：适合包含多个子值、或者下一个状态依赖于上一个状态的复杂场景。它将状态的更新逻辑（Reducer）与组件的渲染逻辑分离，状态变更通过 dispatch action 来驱动，更加可预测。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">const initialState = { count: 0, step: 1 };\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case 'increment': return { ...state, count: state.count + state.step };\n    case 'changeStep': return { ...state, step: action.payload };\n    default: throw new Error();\n  }\n}\n\nfunction Counter() {\n  const [state, dispatch] = useReducer(reducer, initialState);\n  return (\n    &lt;&gt;\n      Count: {state.count}\n      &lt;button onClick={() => dispatch({ type: 'increment' })}&gt;+&lt;/button&gt;\n    &lt;/&gt;\n  );\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，useState 适合简单的状态，比如一个开关、一个数字。但如果状态比较复杂，比如一个表单有很多字段，或者状态的更新逻辑很复杂（像购物车的增删改查），用 useState 就会写一堆 setState，逻辑很散。这时候用 useReducer 就很好，它把更新逻辑抽成了一个 reducer 函数，组件里只负责 dispatch 动作，状态怎么变一目了然。另外，useReducer 还可以配合 Context 做一个轻量级的全局状态管理，替代一部分 Redux 的场景。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 11,
+    "title": "React 中的自定义 Hook 是什么？有什么优势？",
+    "content": "<p>自定义 Hook 本质上是一个以 <code>use</code> 开头的 JavaScript 函数，它内部可以调用其他 Hooks，用于将组件中的有状态逻辑提取出来以便复用。</p><h3>核心优势</h3><ul><li><strong>逻辑复用</strong>：彻底解决了类组件时代 HOC 和 Render Props 带来的“嵌套地狱”问题，让逻辑复用变得极其简单。</li><li><strong>关注点分离</strong>：不再需要按照生命周期（如 componentDidMount）来组织代码，而是按照功能（如数据请求、窗口尺寸监听）来拆分逻辑，代码可读性大幅提升。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 自定义 Hook：封装窗口尺寸监听\nfunction useWindowSize() {\n  const [size, setSize] = useState({ width: 0, height: 0 });\n  \n  useEffect(() => {\n    const handleResize = () => setSize({ width: window.innerWidth, height: window.innerHeight });\n    window.addEventListener('resize', handleResize);\n    handleResize(); // 初始化\n    return () => window.removeEventListener('resize', handleResize);\n  }, []);\n  \n  return size;\n}\n\n// 组件中使用\nfunction App() {\n  const { width, height } = useWindowSize();\n  return &lt;div&gt;{width} x {height}&lt;/div&gt;;\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，自定义 Hook 就是 React 生态里最强大的逻辑复用机制。它本质上就是一个普通的 JS 函数，只是名字以 use 开头，里面可以调用其他 Hook。比如我封装了一个 useWindowSize 或者 useFetch，任何组件只要调用它就能获得相应的状态和副作用处理。它比以前的 HOC 好用太多了，没有额外的组件层级，代码也特别清晰。现在开源社区里大量好用的工具库（比如 ahooks）都是基于自定义 Hook 构建的。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 12,
+    "title": "React 中如何捕获和处理错误？",
+    "content": "<p>React 提供了多种错误处理机制，但不同的错误类型需要不同的捕获方式，这是实际开发中非常关键的防御性编程能力。</p><h3>错误捕获方式</h3><ul><li><strong>Error Boundary（错误边界）</strong>：只能捕获渲染阶段、生命周期和构造函数中的错误。用于展示降级 UI，防止白屏。</li><li><strong>try-catch</strong>：用于捕获事件处理函数（如 onClick）和同步代码中的错误。</li><li><strong>window.onerror / addEventListener('error')</strong>：用于捕获全局未处理的错误，包括异步代码（如 setTimeout、Promise 未 catch）中的错误。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 捕获异步错误\nuseEffect(() => {\n  const handleError = (e) => {\n    console.error('全局捕获到错误:', e.error);\n    // 上报错误日志\n  };\n  window.addEventListener('error', handleError);\n  return () => window.removeEventListener('error', handleError);\n}, []);\n\n// 捕获事件处理中的错误\nconst handleClick = () => {\n  try {\n    JSON.parse('invalid json');\n  } catch (err) {\n    console.error('解析失败:', err);\n  }\n};</code></pre><h3>口语化回答示例</h3><p>“面试官您好，React 里的错误处理得分场景。如果是渲染报错，用 Error Boundary 兜底，展示一个友好的错误页面；如果是按钮点击等事件里的报错，直接在函数里写 try-catch；如果是异步请求或者定时器里的报错，Error Boundary 是抓不到的，得用 window.addEventListener('error') 来全局捕获。在实际项目中，我通常会把 Error Boundary 包在路由外面，再配合一个全局的 error 监听，把错误统一上报到监控平台（如 Sentry）。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 13,
+    "title": "React 中的 useImperativeHandle 是什么？",
+    "content": "<p>useImperativeHandle 通常与 forwardRef 配合使用，它允许开发者自定义暴露给父组件 ref 的实例值。</p><h3>核心作用</h3><ul><li><strong>封装 DOM 操作</strong>：默认情况下，ref 会直接暴露 DOM 节点，父组件可以随意操作。使用 useImperativeHandle 可以只暴露特定的方法，隐藏内部实现细节。</li><li><strong>命令式 API</strong>：在 React 声明式编程中，偶尔需要命令式地调用子组件方法（如打开弹窗、重置表单），这个 Hook 完美解决了这个需求。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">const VideoPlayer = forwardRef((props, ref) => {\n  const videoRef = useRef();\n  \n  useImperativeHandle(ref, () => ({\n    play: () => videoRef.current.play(),\n    pause: () => videoRef.current.pause(),\n    // 不暴露其他 DOM 属性，保证安全性\n  }));\n\n  return &lt;video ref={videoRef} src={props.src} /&gt;;\n});\n\n// 父组件\nfunction App() {\n  const playerRef = useRef();\n  return &lt;button onClick={() => playerRef.current.play()}&gt;播放&lt;/button&gt;;\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，useImperativeHandle 就是用来控制父组件通过 ref 能拿到什么。比如我封装了一个 VideoPlayer 组件，我不想让父组件直接拿到 video 的 DOM 去乱改属性，我只希望它能调用 play 和 pause 方法。这时候用 useImperativeHandle 把这两个方法暴露出去就行了。它让组件的对外接口变得非常干净、安全，是一种很好的封装实践。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 14,
+    "title": "React 的 useEffect 依赖数组的工作原理是什么？",
+    "content": "<p>useEffect 的第二个参数（依赖数组）决定了 Effect 何时执行和何时清理，理解其底层对比机制是避免 Bug 的关键。</p><h3>工作原理</h3><ul><li><strong>不传依赖数组</strong>：每次组件渲染后都会执行 Effect。</li><li><strong>空数组 []</strong>：只在组件挂载时执行，卸载时执行清理函数（模拟 componentDidMount / componentWillUnmount）。</li><li><strong>传入依赖 [a, b]</strong>：React 会在每次渲染后，使用 <code>Object.is</code> 逐个对比新旧依赖。只有当至少一个依赖发生变化时，才会重新执行 Effect。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">useEffect(() => {\n  console.log('userId 变了，重新请求数据');\n  fetchData(userId);\n}, [userId]); // 只有 userId 变化时才执行\n\n// 常见陷阱：对象作为依赖\nuseEffect(() => {\n  doSomething(config);\n}, [config]); // config 每次渲染都是新引用，Effect 会无限执行！\n// 解决：用 useMemo 缓存 config，或者只依赖 config.id</code></pre><h3>口语化回答示例</h3><p>“面试官您好，依赖数组的原理就是 React 在每次渲染后用 Object.is 去比较新旧值。如果传了 [userId]，只有 userId 变了才重新跑。这里最容易踩坑的是把对象或函数放进依赖数组，因为每次渲染它们都是新引用，比较永远不相等，Effect 就会无限执行。解决办法就是用 useMemo 或 useCallback 缓存一下，或者干脆只依赖对象里的基本类型属性。另外，ESLint 的 exhaustive-deps 规则一定要开，它能帮你检查依赖有没有漏写。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 15,
+    "title": "React 中如何实现组件间的通信？",
+    "content": "<p>React 遵循单向数据流，组件通信方式取决于组件之间的层级关系。</p><h3>通信方式总结</h3><ul><li><strong>父传子</strong>：通过 props 传递数据或回调函数。</li><li><strong>子传父</strong>：父组件通过 props 传递回调函数，子组件调用该函数并传参。</li><li><strong>跨层级/兄弟组件</strong>：使用 Context API 共享状态，或使用状态管理库（Redux / Zustand）。</li><li><strong>父子命令式通信</strong>：使用 ref + forwardRef + useImperativeHandle，父组件直接调用子组件方法。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 子传父\nfunction Child({ onMessage }) {\n  return &lt;button onClick={() => onMessage('Hello Parent')}&gt;Send&lt;/button&gt;;\n}\n\n// 父组件\nfunction Parent() {\n  const handleMessage = (msg) => console.log(msg);\n  return &lt;Child onMessage={handleMessage} /&gt;;\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，React 组件通信主要看层级关系。父子之间最简单，props 传数据，回调函数传事件。如果是跨层级或者兄弟组件，小项目用 Context 就够了，大项目就上 Redux 或 Zustand。还有一种特殊场景，比如父组件要主动调子组件的弹窗方法，这时候就用 ref 配合 forwardRef 来做命令式调用。总的来说，React 推崇的是声明式的数据流，能用 props 和 Context 解决的，尽量别用 ref 去命令式操作。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 16,
+    "title": "什么是 React 的 Hydration（注水）？",
+    "content": "<p>Hydration 是 SSR（服务端渲染）流程中的关键步骤，指在客户端将事件监听器绑定到服务端已渲染的静态 HTML 上，使页面变得可交互的过程。</p><h3>核心机制</h3><ul><li><strong>复用 DOM</strong>：React 不会重新创建 DOM，而是尝试将虚拟 DOM 与已有的服务端 HTML 进行匹配，然后附加事件处理器。</li><li><strong>Hydration Mismatch</strong>：如果客户端首次渲染的虚拟 DOM 与服务端 HTML 不一致，React 会发出警告，并在开发模式下丢弃服务端 HTML，重新进行客户端渲染（这会导致性能损失和状态丢失）。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 服务端渲染\nconst html = renderToString(&lt;App /&gt;);\nres.send(`&lt;div id=\"root\"&gt;${html}&lt;/div&gt;`);\n\n// 客户端注水（React 18）\nimport { hydrateRoot } from 'react-dom/client';\nconst root = hydrateRoot(document.getElementById('root'), &lt;App /&gt;);\n\n// 常见导致 Mismatch 的错误\n// 服务端渲染了 &lt;div&gt;，但客户端首次渲染了 &lt;span&gt;</code></pre><h3>口语化回答示例</h3><p>“面试官您好，Hydration 就是‘注水’，可以理解为给服务端返回的静态 HTML 注入交互能力。React 18 用的是 hydrateRoot，它会尽量复用已有的 DOM，只绑定事件，所以比纯客户端渲染快。但这里有个经典坑叫 Hydration Mismatch，就是服务端和客户端首次渲染的内容对不上，比如用了 Date.now() 或者 Math.random()，服务端和客户端生成的值不一样，React 就会报错并回退到重新渲染。所以 SSR 项目里一定要保证首屏渲染的确定性。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 17,
+    "title": "React 中的 useTransition 和 useDeferredValue 有什么区别？",
+    "content": "<p>这两个都是 React 18 引入的并发特性，用于区分紧急更新和非紧急更新，但使用场景不同。</p><h3>核心区别</h3><ul><li><strong>useTransition</strong>：用于你<strong>控制</strong>状态更新的场景。它将 setState 包裹在 startTransition 中，告诉 React 这个更新是低优先级的，可以被用户的高优先级操作（如输入）打断。</li><li><strong>useDeferredValue</strong>：用于你<strong>接收</strong>props 或 state 的场景。它将一个值标记为延迟值，当这个值变化时，React 会先渲染紧急的部分，再在后台渲染延迟的部分。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// useTransition：控制更新\nconst [isPending, startTransition] = useTransition();\nconst handleChange = (e) => {\n  setInput(e.target.value); // 紧急\n  startTransition(() => setList(filter(e.target.value))); // 非紧急\n};\n\n// useDeferredValue：延迟接收\nconst deferredQuery = useDeferredValue(query);\n// 列表渲染使用 deferredQuery，输入框使用 query</code></pre><h3>口语化回答示例</h3><p>“面试官您好，这两个都是 React 18 的并发 API，用来优化用户体验的。useTransition 是你主动把某个 setState 标记为‘不紧急’，比如搜索时，输入框的值要立刻变，但下面的列表可以晚点渲染。useDeferredValue 是你拿到一个值后，告诉 React ‘这个值的更新可以延后’，比如父组件传下来的 query，子组件可以用 useDeferredValue 包一下，这样输入的时候列表不会卡。简单说，useTransition 是控制‘产生’，useDeferredValue 是控制‘消费’。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 18,
+    "title": "React 中如何优化大列表的渲染性能？",
+    "content": "<p>当列表数据量达到数千甚至上万条时，直接渲染会导致严重的性能问题。虚拟列表（Virtualization）是业界标准的解决方案。</p><h3>核心原理</h3><ul><li><strong>虚拟滚动</strong>：只渲染可视区域内的元素，滚动时动态替换 DOM 节点。无论列表有多长，DOM 节点数量始终保持在几十个左右。</li><li><strong>常用库</strong>：react-virtualized、react-window、@tanstack/react-virtual 等。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">import { FixedSizeList } from 'react-window';\n\nfunction BigList({ items }) {\n  return (\n    &lt;FixedSizeList height={600} itemCount={items.length} itemSize={50} width=\"100%\"&gt;\n      {({ index, style }) => (\n        &lt;div style={style}&gt;{items[index].name}&lt;/div&gt;\n      )}\n    &lt;/FixedSizeList&gt;\n  );\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，大列表渲染的性能优化核心就是虚拟滚动。原理很简单：只渲染用户看得到的那部分 DOM，滚动的时候动态替换内容。不管列表有一万条还是一百万条，实际 DOM 节点可能就只有二三十个，性能自然就上去了。实际项目中我一般用 react-window 或者 tanstack/react-virtual，它们都很轻量。除了虚拟滚动，如果列表数据是异步加载的，还可以配合无限滚动（Infinite Scroll）来做分页请求，进一步优化首屏体验。”",
+    "createTime": 1749369600000
+  }
+]
+
+export const wxAppList=[
+  {
+    "id": 1,
+    "title": "微信小程序的双线程架构是什么？为什么要这样设计？",
+    "content": "<p>微信小程序采用了独特的双线程架构，将逻辑层（App Service）和视图层（View）分离。</p><h3>核心机制</h3><ul><li><strong>逻辑层</strong>：运行在 JSCore 中，负责数据处理、网络请求、API 调用等业务逻辑。</li><li><strong>视图层</strong>：运行在 WebView 中，负责界面的渲染和用户交互。</li><li><strong>通信机制</strong>：两个线程通过 Native（微信客户端）作为桥梁进行异步通信。逻辑层通过 <code>setData</code> 将数据传递给视图层，视图层通过事件系统将用户操作传回逻辑层。</li></ul><h3>设计原因</h3><ul><li><strong>安全性</strong>：小程序允许运行第三方代码，将逻辑层放在 JSCore 中且没有 DOM/BOM 访问权限，可以防止恶意代码篡改页面或窃取用户数据。</li><li><strong>性能</strong>：将渲染和逻辑分离，避免了 JS 执行阻塞页面渲染，提升了页面的流畅度。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 逻辑层：修改数据必须通过 setData，不能直接赋值\nPage({\n  data: { count: 0 },\n  updateCount() {\n    // 错误：直接赋值不会触发视图更新\n    // this.data.count = 1;\n    \n    // 正确：通过 setData 传递给视图层\n    this.setData({ count: 1 });\n  }\n});</code></pre><h3>口语化回答示例</h3><p>“面试官您好，小程序的双线程就是逻辑层和视图层分开跑。逻辑层在 JSCore 里跑 JS，没有 DOM 操作能力；视图层在 WebView 里负责渲染。它们之间靠 Native 层传话。这样设计主要是为了安全，防止第三方小程序搞破坏，同时也避免了 JS 执行卡住页面渲染。所以我们在小程序里改数据必须用 setData，因为数据要跨线程传给视图层，直接赋值是无效的。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 2,
+  "title": "小程序的生命周期有哪些？onLoad 和 onShow 的区别是什么？",
+  "content": "<p>微信小程序的生命周期主要分为应用级（App）和页面级（Page）两个维度。理解它们对于编写逻辑清晰、性能高效的小程序至关重要。</p><h3>应用级生命周期（App）</h3><ul><li><strong>onLaunch</strong>：小程序初始化时触发，全局只执行一次。适合进行全局变量初始化、云开发初始化或获取用户登录状态。</li><li><strong>onShow</strong>：小程序从后台进入前台时触发。适合恢复定时器、刷新全局状态。</li><li><strong>onHide</strong>：小程序从前台进入后台时触发。适合暂停定时器、保存数据。</li></ul><h3>页面级生命周期（Page）</h3><ul><li><strong>onLoad</strong>：页面加载时触发，一个页面只会调用一次。可以获取页面路径中的参数（options），适合做一次性初始化操作。</li><li><strong>onShow</strong>：页面显示/切入前台时触发，每次页面显示都会调用（包括从其他页面返回、从后台切回前台）。适合做数据刷新。</li><li><strong>onReady</strong>：页面初次渲染完成时触发，一个页面只会调用一次，代表页面已准备妥当，适合获取 DOM 节点信息。</li><li><strong>onHide</strong>：页面隐藏/切入后台时触发。</li><li><strong>onUnload</strong>：页面卸载时触发，如 redirectTo 或 navigateBack。适合清理定时器、取消订阅等。</li></ul><h3>onLoad 和 onShow 的核心区别</h3><ul><li><strong>触发次数</strong>：onLoad 只在页面首次加载时触发一次；onShow 每次页面显示都会触发。</li><li><strong>参数获取</strong>：onLoad 可以接收页面跳转带来的 options 参数；onShow 无法获取页面参数。</li><li><strong>执行顺序</strong>：页面首次加载时，先执行 onLoad，再执行 onShow。</li><li><strong>使用场景</strong>：onLoad 适合初始化数据、获取路由参数；onShow 适合每次进入页面时刷新数据（如从详情页返回列表页时更新列表）。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">Page({\n  data: {\n    productId: null,\n    detail: null,\n    commentCount: 0\n  },\n  // 页面加载时触发，只执行一次\n  onLoad(options) {\n    console.log('onLoad: 页面加载，参数:', options);\n    this.setData({ productId: options.id });\n    this.fetchDetail(options.id); // 首次加载详情\n  },\n  // 页面显示时触发，每次都会执行\n  onShow() {\n    console.log('onShow: 页面显示');\n    // 每次进入页面都刷新评论数量\n    this.fetchCommentCount(this.data.productId);\n  },\n  fetchDetail(id) {\n    // 模拟请求详情\n  },\n  fetchCommentCount(id) {\n    // 模拟请求评论数\n  }\n});</code></pre><h3>口语化回答示例</h3><p>“面试官您好，小程序的生命周期分应用级和页面级。应用级有 onLaunch、onShow、onHide，分别对应初始化、进前台、进后台。页面级主要有 onLoad、onShow、onReady、onHide、onUnload。其中 onLoad 和 onShow 的区别我一般从三个维度来记：第一是触发次数，onLoad 只触发一次，onShow 每次显示都触发；第二是参数，onLoad 能拿到路由参数，onShow 拿不到；第三是用途，onLoad 适合做初始化，比如获取商品ID然后请求详情，onShow 适合做刷新，比如从评论页返回详情页时更新评论数。执行顺序上，首次加载是先 onLoad 再 onShow。所以实际开发中，初始化逻辑放 onLoad，需要频繁刷新的逻辑放 onShow。”",
+  "createTime": 1749369600000
+},
+  {
+    "id": 3,
+    "title": "小程序中 setData 的工作原理和性能优化策略是什么？",
+    "content": "<p><code>setData</code> 是小程序中修改数据并触发视图更新的唯一方式，但频繁或不当使用会导致严重的性能问题。</p><h3>工作原理</h3><p>setData 会将数据从逻辑层序列化后，通过 Native 层传递给视图层，视图层再反序列化并更新 DOM。这个过程涉及跨线程通信和序列化/反序列化开销。</p><h3>性能优化策略</h3><ul><li><strong>避免频繁调用</strong>：将多次 setData 合并为一次，或使用数据路径局部更新。</li><li><strong>局部更新</strong>：使用路径表达式只更新变化的字段，如 <code>this.setData({'list[0].name': 'new'})</code>，而不是整个数组。</li><li><strong>控制数据量</strong>：单次 setData 传输的数据量不要超过 256KB，避免传输大对象。</li><li><strong>避免在 onPageScroll 中使用</strong>：滚动事件触发频率极高，在回调中 setData 会导致严重的卡顿。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">//  错误：每次循环都调用 setData\nfor (let i = 0; i < 100; i++) {\n  this.setData({ count: i });\n}\n\n//  正确：局部更新 + 合并\nconst updateData = {};\nfor (let i = 0; i < 100; i++) {\n  updateData[`list[${i}].name`] = `item_${i}`;\n}\nthis.setData(updateData);</code></pre><h3>口语化回答示例</h3><p>“面试官您好，setData 的性能问题核心在于它要跨线程通信和序列化。优化策略主要有几点：第一，尽量用路径表达式做局部更新，别每次都传整个大对象；第二，多次修改要合并成一次 setData；第三，千万别在 onPageScroll 这种高频事件里调 setData，会卡死。另外单次传输的数据量最好控制在 256KB 以内。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 4,
+    "title": "小程序的路由导航方式有哪些？有什么区别？",
+    "content": "<p>微信小程序提供了四种路由导航方式，适用于不同的页面跳转场景。</p><h3>四种导航方式</h3><ul><li><strong>wx.navigateTo</strong>：保留当前页面，跳转到新页面。页面栈最多 10 层。不能跳转到 TabBar 页面。</li><li><strong>wx.redirectTo</strong>：关闭当前页面，跳转到新页面。不会增加页面栈层级。不能跳转到 TabBar 页面。</li><li><strong>wx.switchTab</strong>：跳转到 TabBar 页面，并关闭所有非 TabBar 页面。</li><li><strong>wx.navigateBack</strong>：关闭当前页面，返回上一级或多级页面。通过 delta 参数控制返回的层数。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 跳转到新页面，保留当前页\nwx.navigateTo({ url: '/pages/detail/detail?id=123' });\n\n// 关闭当前页，跳转到新页面\nwx.redirectTo({ url: '/pages/login/login' });\n\n// 跳转到 TabBar 页面\nwx.switchTab({ url: '/pages/index/index' });\n\n// 返回上一页\nwx.navigateBack({ delta: 1 });</code></pre><h3>口语化回答示例</h3><p>“面试官您好，小程序路由有四种。navigateTo 是最常用的，跳到新页面但保留当前页，可以返回；redirectTo 是关掉当前页再跳，不能返回；switchTab 专门用来跳 TabBar 页面，会清掉所有非 Tab 页面；navigateBack 就是返回上一页。要注意 navigateTo 和 redirectTo 都不能跳 TabBar 页面，跳 TabBar 只能用 switchTab。另外页面栈最多 10 层，超过就跳不动了。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 5,
+    "title": "WXML 中的数据绑定和列表渲染如何实现？",
+    "content": "<p>WXML 是小程序的模板语言，提供了数据绑定、列表渲染和条件渲染等核心能力。</p><h3>核心语法</h3><ul><li><strong>数据绑定</strong>：使用 <code>{{ }}</code> 将 JS 中的数据渲染到视图，支持简单的表达式运算。</li><li><strong>列表渲染</strong>：使用 <code>wx:for</code> 遍历数组，<code>wx:key</code> 用于指定唯一标识以优化渲染性能。</li><li><strong>条件渲染</strong>：使用 <code>wx:if</code> / <code>wx:elif</code> / <code>wx:else</code> 控制元素的显示与隐藏。</li></ul><h3>代码示例</h3><pre><code class=\"language-html\">&lt;!-- 数据绑定 --&gt;\n&lt;view&gt;{{ message }}&lt;/view&gt;\n&lt;view&gt;{{ count + 1 }}&lt;/view&gt;\n\n&lt;!-- 列表渲染 --&gt;\n&lt;view wx:for=\"{{ todoList }}\" wx:key=\"id\"&gt;\n  {{ index }}: {{ item.name }}\n&lt;/view&gt;\n\n&lt;!-- 条件渲染 --&gt;\n&lt;view wx:if=\"{{ isLogin }}\"&gt;欢迎回来&lt;/view&gt;\n&lt;view wx:else&gt;请先登录&lt;/view&gt;</code></pre><h3>口语化回答示例</h3><p>“面试官您好，WXML 的语法和 Vue 的模板很像。数据绑定用双大括号，列表渲染用 wx:for，条件渲染用 wx:if。重点要注意的是 wx:for 一定要加 wx:key，不然列表更新时会有性能问题，而且可能出现状态错乱。另外 wx:if 和 hidden 的区别也跟 Vue 一样，wx:if 是真正的销毁和创建，hidden 只是 CSS 隐藏，频繁切换用 hidden 更好。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 6,
+    "title": "WXSS 中的 rpx 单位是什么？如何实现屏幕适配？",
+    "content": "<p>rpx（responsive pixel）是小程序独有的响应式单位，专门用于解决多机型屏幕适配问题。</p><h3>核心原理</h3><ul><li><strong>基准设计稿</strong>：小程序规定屏幕宽度固定为 750rpx，无论实际设备宽度是多少。</li><li><strong>自动换算</strong>：框架会根据设备屏幕宽度自动将 rpx 换算为 px。例如在 375px 宽的 iPhone 上，1rpx = 0.5px；在 414px 宽的 iPhone Plus 上，1rpx ≈ 0.55px。</li><li><strong>开发规范</strong>：设计稿通常以 750px 宽度为基准，设计稿上量出的 px 值直接当作 rpx 使用即可。</li></ul><h3>代码示例</h3><pre><code class=\"language-css\">/* 750rpx 始终等于屏幕宽度 */\n.container {\n  width: 750rpx;\n  padding: 30rpx;\n}\n\n.title {\n  font-size: 32rpx;  /* 自动适配不同屏幕 */\n  line-height: 48rpx;\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，rpx 是小程序的响应式单位，核心思想是把屏幕宽度固定为 750rpx。不管什么手机，750rpx 都等于屏幕宽度，框架会自动换算成 px。所以开发的时候，设计稿按 750px 出图，量出来多少 px 就直接写多少 rpx，完全不用自己做媒体查询适配。不过要注意，rpx 在超宽屏设备上可能会显得过大，极端场景下可以配合 px 混用。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 7,
+    "title": "小程序组件化开发怎么做？如何自定义组件？",
+    "content": "<p>当小程序项目变复杂时，应该将高复用部分抽成自定义组件，减少重复代码。</p><h3>组件结构</h3><p>每个自定义组件由四个文件组成：<code>index.wxml</code>、<code>index.wxss</code>、<code>index.js</code>、<code>index.json</code>。</p><h3>核心配置</h3><ul><li><strong>index.json</strong>：设置 <code>\"component\": true</code> 声明该目录为组件。</li><li><strong>index.js</strong>：使用 <code>Component()</code> 构造器代替 <code>Page()</code>，通过 <code>properties</code> 定义外部传入的属性，通过 <code>methods</code> 定义组件方法。</li><li><strong>页面引用</strong>：在页面的 json 文件中通过 <code>usingComponents</code> 注册组件。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// components/product-card/index.js\nComponent({\n  properties: {\n    title: String,\n    price: Number\n  },\n  methods: {\n    onTap() {\n      this.triggerEvent('cardclick', { id: this.data.id });\n    }\n  }\n});</code></pre><pre><code class=\"language-json\">// pages/index/index.json\n{\n  \"usingComponents\": {\n    \"product-card\": \"/components/product-card/index\"\n  }\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，小程序的组件化跟 Vue 很像。每个组件有四个文件，json 里要声明 component: true，js 里用 Component 构造器，通过 properties 接收外部数据，用 triggerEvent 向父组件发事件。页面用的时候在 json 里用 usingComponents 注册就行。像商品卡片、价格展示、SKU 弹窗这些高频复用的部分，我都建议抽成组件，后续改样式和交互也方便。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 8,
+    "title": "小程序中如何实现网络请求？如何封装 wx.request？",
+    "content": "<p>小程序使用 <code>wx.request</code> 发起 HTTPS 网络请求，但在实际项目中不应在每个页面散写请求逻辑。</p><h3>封装策略</h3><ul><li><strong>统一收口</strong>：将请求逻辑封装到 <code>services/</code> 目录下，按业务模块拆分文件。</li><li><strong>统一拦截</strong>：封装一个通用的 request 函数，统一处理 token 注入、错误提示、loading 状态等。</li><li><strong>域名配置</strong>：小程序要求所有请求必须是 HTTPS，且域名需在后台配置白名单（开发时可在开发者工具中勾选‘不校验合法域名’）。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// services/product.js\nexport function getProducts() {\n  return new Promise((resolve, reject) => {\n    wx.request({\n      url: 'https://api.example.com/products',\n      method: 'GET',\n      success: (res) => resolve(res.data),\n      fail: (err) => reject(err)\n    });\n  });\n}\n\n// pages/index/index.js\nimport { getProducts } from '../../services/product';\nPage({\n  async onLoad() {\n    const res = await getProducts();\n    this.setData({ products: res.list });\n  }\n});</code></pre><h3>口语化回答示例</h3><p>“面试官您好，wx.request 是小程序发请求的基础 API，但实际项目里一定要封装。我一般会在 services 目录下按模块拆分，比如 product.js、order.js，每个文件导出对应的请求函数。同时封装一个通用的 request 工具函数，统一处理请求头 token、全局 loading、错误码提示这些。另外要注意小程序只支持 HTTPS，域名要在微信公众平台后台配置白名单，开发阶段可以在开发者工具里关掉域名校验。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 9,
+    "title": "小程序的本地存储 API 有哪些？有什么限制？",
+    "content": "<p>小程序提供了本地缓存能力，用于持久化存储用户数据。</p><h3>核心 API</h3><ul><li><strong>同步 API</strong>：<code>wx.setStorageSync</code>、<code>wx.getStorageSync</code>、<code>wx.removeStorageSync</code>。</li><li><strong>异步 API</strong>：<code>wx.setStorage</code>、<code>wx.getStorage</code>、<code>wx.removeStorage</code>。</li><li><strong>清除全部</strong>：<code>wx.clearStorageSync</code>。</li></ul><h3>存储限制</h3><ul><li>单个 key 最大 1MB，总上限 10MB。</li><li>存储的数据会被序列化为 JSON 字符串，不支持存储函数、undefined 等不可序列化类型。</li><li>本地缓存是设备级别的，卸载小程序或清除微信缓存会导致数据丢失。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 存储用户信息\nwx.setStorageSync('userInfo', { name: 'Tom', age: 25 });\n\n// 读取\nconst userInfo = wx.getStorageSync('userInfo');\nconsole.log(userInfo.name); // Tom\n\n// 删除指定 key\nwx.removeStorageSync('userInfo');</code></pre><h3>口语化回答示例</h3><p>“面试官您好，小程序的本地存储跟 localStorage 用法很像，有同步和异步两套 API。我一般用同步的，写起来方便。要注意的限制是：总共只有 10MB，单个 key 最大 1MB；数据会被 JSON 序列化，所以函数、undefined 这些存不了；而且用户卸载小程序或清缓存数据就没了，重要数据还是要存服务端。实际开发中我一般用它存 token、用户偏好设置、搜索历史这些。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 10,
+    "title": "小程序如何实现分享功能？onShareAppMessage 怎么用？",
+    "content": "<p>小程序通过 <code>onShareAppMessage</code> 页面事件处理函数来自定义分享内容。</p><h3>核心机制</h3><ul><li><strong>触发方式</strong>：用户点击右上角菜单的‘转发’按钮，或页面中的 <code>&lt;button open-type=\"share\"&gt;</code> 按钮。</li><li><strong>返回值</strong>：该函数需要 return 一个 Object，包含 <code>title</code>（分享标题）、<code>path</code>（分享路径）、<code>imageUrl</code>（分享图片）等字段。</li><li><strong>默认行为</strong>：如果不定义此函数，右上角菜单中的转发按钮会被隐藏。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">Page({\n  onShareAppMessage(res) {\n    console.log('分享来源:', res.from); // 'menu' 或 'button'\n    return {\n      title: '自定义分享标题',\n      path: '/pages/index/index?id=123',\n      imageUrl: '/images/share-cover.png'\n    };\n  }\n});</code></pre><pre><code class=\"language-html\">&lt;!-- 按钮触发分享 --&gt;\n&lt;button open-type=\"share\"&gt;分享给好友&lt;/button&gt;</code></pre><h3>口语化回答示例</h3><p>“面试官您好，小程序分享用的是 onShareAppMessage 这个页面事件。如果不写它，右上角的转发按钮是隐藏的。写了之后 return 一个对象，可以自定义标题、路径和图片。分享来源有两种：右上角菜单和 button 按钮，通过 res.from 可以区分。path 里可以带参数，这样别人点分享链接进来就能直接定位到具体内容。实际开发中我还会根据分享来源做不同的埋点统计。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 11,
+    "title": "小程序的下拉刷新和上拉加载怎么实现？",
+    "content": "<p>小程序提供了内置的下拉刷新和上拉触底事件，常用于列表页的数据加载。</p><h3>核心配置</h3><ul><li><strong>下拉刷新</strong>：需在页面 json 中设置 <code>\"enablePullDownRefresh\": true</code>，然后在 JS 中监听 <code>onPullDownRefresh</code>，数据刷新完成后调用 <code>wx.stopPullDownRefresh()</code> 停止动画。</li><li><strong>上拉加载</strong>：监听 <code>onReachBottom</code> 事件，在回调中追加数据。可通过 <code>onReachBottomDistance</code> 配置触发距离。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">Page({\n  data: {\n    list: [],\n    page: 1,\n    hasMore: true\n  },\n  // 下拉刷新\n  onPullDownRefresh() {\n    this.setData({ page: 1, list: [] });\n    this.fetchList().then(() => {\n      wx.stopPullDownRefresh(); // 必须手动停止\n    });\n  },\n  // 上拉加载更多\n  onReachBottom() {\n    if (!this.data.hasMore) return;\n    this.setData({ page: this.data.page + 1 });\n    this.fetchList();\n  },\n  async fetchList() {\n    const res = await wx.request({ url: `/api/list?page=${this.data.page}` });\n    const newList = this.data.list.concat(res.data.list);\n    this.setData({ \n      list: newList,\n      hasMore: res.data.list.length > 0\n    });\n  }\n});</code></pre><h3>口语化回答示例</h3><p>“面试官您好，下拉刷新需要在页面 json 里开启 enablePullDownRefresh，然后在 onPullDownRefresh 里重新请求数据，请求完一定要调 wx.stopPullDownRefresh() 关掉动画，不然转圈会一直转。上拉加载就是监听 onReachBottom，每次触发就把 page 加 1 再请求追加数据。注意要加一个 hasMore 的标记，数据加载完了就别再请求了。另外 onReachBottom 默认是距底部 50px 触发，可以在 json 里配 onReachBottomDistance 调整。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 12,
+    "title": "小程序中 wx:if 和 hidden 的区别是什么？",
+    "content": "<p>在 WXML 中，控制元素显示与隐藏有两种常用方式：<code>wx:if</code> 和 <code>hidden</code>，它们的底层渲染机制完全不同。</p><h3>核心区别</h3><ul><li><strong>wx:if</strong>：真正的条件渲染。当条件为 false 时，元素不会被渲染到 DOM 树中；当条件变为 true 时，才会创建并插入 DOM。每次切换都会触发组件的销毁和重建。</li><li><strong>hidden</strong>：仅仅是 CSS 层面的显示控制。无论条件真假，元素始终会被渲染到 DOM 中，只是通过 <code>display: none</code> 来隐藏。</li><li><strong>性能对比</strong>：频繁切换状态时，<code>hidden</code> 性能更好（只改变 CSS）；如果条件很少改变，或者初始化时就不需要渲染的复杂组件，<code>wx:if</code> 更好（减少初始渲染开销）。</li></ul><h3>代码示例</h3><pre><code class=\"language-html\">&lt;!-- wx:if：条件为 false 时 DOM 中不存在该元素 --&gt;\n&lt;view wx:if=\"{{ isShow }}\"&gt;我是 wx:if 控制的元素&lt;/view&gt;\n\n&lt;!-- hidden：DOM 中始终存在，只是 display: none --&gt;\n&lt;view hidden=\"{{ !isShow }}\"&gt;我是 hidden 控制的元素&lt;/view&gt;</code></pre><h3>口语化回答示例</h3><p>“面试官您好，这两个的区别跟 Vue 里的 v-if 和 v-show 是一样的。wx:if 是真正的销毁和创建，条件为假的时候 DOM 里压根没有这个节点；hidden 只是 CSS 隐藏，DOM 节点一直都在。所以如果频繁切换显示隐藏，比如 Tab 切换，用 hidden 性能更好，因为不用反复销毁重建。但如果这个组件很重，或者初始条件就是 false 没必要渲染，那就用 wx:if 节省初始渲染开销。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 13,
+    "title": "小程序中如何实现事件传参？catch 和 bind 的区别是什么？",
+    "content": "<p>小程序的事件绑定和数据传递是开发中的高频操作，理解事件冒泡和传参机制至关重要。</p><h3>事件绑定区别</h3><ul><li><strong>bind</strong>：普通事件绑定，事件会继续向上冒泡。例如 <code>bindtap</code>。</li><li><strong>catch</strong>：阻止事件继续向上冒泡。例如 <code>catchtap</code>。常用于嵌套元素中防止父级事件被触发。</li></ul><h3>事件传参方式</h3><p>小程序不支持在事件绑定中直接传参（如 <code>bindtap=\"handleClick(item)\"</code> 是无效的），需要通过 <code>data-</code> 自定义属性来传递数据，在事件对象的 <code>currentTarget.dataset</code> 中获取。</p><h3>代码示例</h3><pre><code class=\"language-html\">&lt;!-- 通过 data-id 传递参数 --&gt;\n&lt;view wx:for=\"{{ list }}\" wx:key=\"id\" \n      bindtap=\"onItemClick\" \n      data-id=\"{{ item.id }}\" \n      data-name=\"{{ item.name }}\"&gt;\n  {{ item.name }}\n&lt;/view&gt;\n\n&lt;!-- catchtap 阻止冒泡 --&gt;\n&lt;view bindtap=\"onParentTap\"&gt;\n  &lt;button catchtap=\"onChildTap\"&gt;点我不会触发父级事件&lt;/button&gt;\n&lt;/view&gt;</code></pre><pre><code class=\"language-javascript\">Page({\n  onItemClick(e) {\n    const { id, name } = e.currentTarget.dataset;\n    console.log(id, name);\n  }\n});</code></pre><h3>口语化回答示例</h3><p>“面试官您好，bind 和 catch 的区别就是冒泡不冒泡，bind 会让事件继续往上走，catch 会把它拦住。传参的话，小程序不能像 Vue 那样直接在括号里写参数，得用 data-xxx 自定义属性，然后在事件回调里通过 e.currentTarget.dataset 来拿。注意是 currentTarget 而不是 target，currentTarget 是绑定事件的那个元素，target 是实际触发事件的元素，在嵌套场景下这两个可能不一样。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 14,
+    "title": "小程序的 WXS 是什么？它和 JS 有什么区别？",
+    "content": "<p>WXS（WeiXin Script）是小程序独有的脚本语言，运行在视图层（WebView），而非逻辑层（JSCore）。</p><h3>核心特点</h3><ul><li><strong>运行位置</strong>：WXS 运行在视图层，可以直接参与渲染过程，避免了逻辑层到视图层的跨线程通信开销。</li><li><strong>适用场景</strong>：适合做简单的数据格式化（如日期格式化、价格处理）、响应式绑定（如根据滚动位置动态改变样式）等高频渲染场景。</li><li><strong>限制</strong>：WXS 不能调用 JS 中定义的函数，也不能调用小程序 API（如 wx.request）；它只能操作 WXML 中的数据。</li></ul><h3>代码示例</h3><pre><code class=\"language-html\">&lt;!-- 在 WXML 中直接使用 WXS --&gt;\n&lt;wxs module=\"format\"&gt;\n  module.exports.formatPrice = function(price) {\n    return '¥' + (price / 100).toFixed(2);\n  }\n&lt;/wxs&gt;\n\n&lt;view&gt;{{ format.formatPrice(9900) }}&lt;/view&gt; &lt;!-- 输出: ¥99.00 --&gt;</code></pre><h3>口语化回答示例</h3><p>“面试官您好，WXS 是小程序视图层的脚本语言，跟 JS 最大的区别是它跑在 WebView 里而不是 JSCore 里。它的好处是不用跨线程通信，所以做高频的渲染计算特别快，比如列表里每个商品的价格格式化、根据滚动位置动态改样式这些。但它不能调小程序 API，也不能和 JS 互相调函数，就是个纯粹的视图层计算工具。实际开发中我一般用它做数据格式化，避免在 JS 里处理完再 setData 传过去。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 15,
+    "title": "小程序中如何实现父子组件通信？",
+    "content": "<p>小程序的组件通信遵循单向数据流原则，父子组件之间有明确的通信方式。</p><h3>父传子</h3><p>父组件在 WXML 中通过属性传递数据，子组件在 <code>properties</code> 中声明接收。properties 支持类型校验和默认值。</p><h3>子传父</h3><p>子组件通过 <code>this.triggerEvent('eventName', detail)</code> 触发自定义事件，父组件在 WXML 中通过 <code>bind:eventName</code> 监听并处理。</p><h3>代码示例</h3><pre><code class=\"language-html\">&lt;!-- 父组件 WXML --&gt;\n&lt;child-component \n  title=\"{{ parentTitle }}\" \n  bind:childaction=\"onChildAction\" \n/&gt;</code></pre><pre><code class=\"language-javascript\">// 子组件 JS\nComponent({\n  properties: {\n    title: { type: String, value: '默认标题' }\n  },\n  methods: {\n    handleTap() {\n      this.triggerEvent('childaction', { msg: '来自子组件的消息' });\n    }\n  }\n});\n\n// 父组件 JS\nPage({\n  onChildAction(e) {\n    console.log(e.detail.msg); // '来自子组件的消息'\n  }\n});</code></pre><h3>口语化回答示例</h3><p>“面试官您好，小程序组件通信和 Vue 几乎一样。父传子就是通过属性，子组件在 properties 里声明就行，还支持类型校验和默认值。子传父用 triggerEvent 触发自定义事件，父组件用 bind:事件名 来监听。注意 triggerEvent 的第二个参数是 detail 对象，父组件在 e.detail 里拿数据。如果组件嵌套层级很深，还可以用 eventChannel 或者全局状态管理（如 MobX-miniprogram）来解决跨层级通信的问题。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 16,
+    "title": "小程序的分包加载是什么？如何配置？",
+    "content": "<p>微信小程序主包大小限制为 2MB，当项目变大时需要使用分包加载来突破限制。</p><h3>核心概念</h3><ul><li><strong>主包</strong>：包含 app.json、app.wxss 以及 pages 数组中声明的页面。用户首次打开小程序时下载。</li><li><strong>分包</strong>：将部分页面拆分到独立的子包中，只有当用户进入该分包下的页面时才下载对应子包。</li><li><strong>总包限制</strong>：所有分包加起来不超过 20MB。</li></ul><h3>配置方式</h3><p>在 <code>app.json</code> 中通过 <code>subpackages</code> 字段配置分包，每个分包指定 <code>root</code>（分包根目录）和 <code>pages</code>（分包页面列表）。</p><h3>代码示例</h3><pre><code class=\"language-json\">{\n  \"pages\": [\n    \"pages/index/index\",\n    \"pages/logs/logs\"\n  ],\n  \"subpackages\": [\n    {\n      \"root\": \"packageA\",\n      \"pages\": [\n        \"pages/detail/detail\",\n        \"pages/comment/comment\"\n      ]\n    },\n    {\n      \"root\": \"packageB\",\n      \"pages\": [\n        \"pages/order/order\"\n      ]\n    }\n  ]\n}</code></pre><h3>口语化回答示例</h3><p>“面试官您好，小程序主包限制 2MB，项目大了就得用分包。分包就是把不常用的页面拆到单独的子包里，用户点到的时候才下载。配置很简单，在 app.json 里加 subpackages 字段，指定 root 目录和 pages 就行。总包限制是 20MB。实际开发中我一般按业务模块分包，比如订单模块、用户中心模块各一个包。还可以配合分包预下载，在用户进入主包某个页面时提前下载分包，提升体验。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 17,
+    "title": "小程序中如何实现页面间通信？",
+    "content": "<p>小程序中页面间的通信方式取决于页面之间的关系和通信场景。</p><h3>常见方式</h3><ul><li><strong>URL 参数</strong>：通过 navigateTo 的 url 传递简单数据，在目标页的 onLoad(options) 中接收。适合传递 ID 等简单标识。</li><li><strong>全局变量</strong>：通过 getApp().globalData 共享数据。适合全局状态（如用户信息），但需注意数据同步问题。</li><li><strong>本地存储</strong>：通过 wx.setStorageSync/getStorageSync 传递。适合需要持久化的数据。</li><li><strong>EventChannel</strong>：navigateTo 的 success 回调中获取 eventChannel，实现页面间双向通信。适合详情页返回列表页时传递修改后的数据。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 页面 A：跳转并监听返回数据\nwx.navigateTo({\n  url: '/pages/detail/detail?id=123',\n  success(res) {\n    res.eventChannel.on('updateList', (data) => {\n      console.log('收到详情页返回的数据:', data);\n      this.refreshList();\n    });\n  }\n});\n\n// 页面 B（详情页）：返回时发送数据\nconst eventChannel = this.getOpenerEventChannel();\neventChannel.emit('updateList', { updated: true });\nwx.navigateBack();</code></pre><h3>口语化回答示例</h3><p>“面试官您好，页面间通信看场景选方式。简单的 ID 传递就用 URL 参数，在 onLoad 的 options 里拿。全局状态放 globalData。最推荐的是 EventChannel，它是 navigateTo 提供的双向通信机制，比如从详情页返回列表页，详情页改了数据要通知列表刷新，就用 eventChannel.emit 发事件，列表页用 eventChannel.on 监听。比用 globalData 或本地存储优雅得多，而且不用担心数据不同步的问题。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 18,
+    "title": "小程序的授权机制有哪些？wx.login 的流程是什么？",
+    "content": "<p>小程序的授权体系是用户身份识别和数据安全的核心。</p><h3>wx.login 登录流程</h3><ul><li>调用 <code>wx.login()</code> 获取临时登录凭证 <code>code</code>。</li><li>将 code 发送给开发者服务器，服务器拿着 code 去微信后端换取 <code>openid</code> 和 <code>session_key</code>。</li><li>服务器生成自定义 token 返回给小程序，后续请求携带 token 鉴权。</li></ul><h3>用户信息授权</h3><ul><li>旧版 <code>wx.getUserInfo</code> 已废弃，现在获取用户头像和昵称需要通过 <code>&lt;button open-type=\"chooseAvatar\"&gt;</code> 和 <code>&lt;input type=\"nickname\"&gt;</code> 让用户主动填写。</li><li>手机号获取需要通过 <code>&lt;button open-type=\"getPhoneNumber\"&gt;</code>，回调中获取 code 再由服务器解密。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 登录流程\nwx.login({\n  success(res) {\n    if (res.code) {\n      wx.request({\n        url: 'https://api.example.com/login',\n        data: { code: res.code },\n        success(response) {\n          wx.setStorageSync('token', response.data.token);\n        }\n      });\n    }\n  }\n});</code></pre><h3>口语化回答示例</h3><p>“面试官您好，wx.login 的流程是：小程序调 wx.login 拿到 code，把 code 发给自己的服务器，服务器拿 code 去微信后端换 openid 和 session_key，然后生成自己的 token 返回给小程序。整个过程中 openid 和 session_key 绝不能暴露给前端。至于用户信息，现在微信不允许静默获取了，头像和昵称得让用户通过专门的按钮和输入框主动提供，手机号也是通过 button 组件获取 code 再由服务器解密。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 19,
+    "title": "小程序中如何处理长列表的性能问题？",
+    "content": "<p>当列表数据量很大时（如上千条），直接渲染所有节点会导致严重的性能问题和内存溢出。</p><h3>优化策略</h3><ul><li><strong>分页加载</strong>：结合 onReachBottom 实现上拉加载更多，每次只请求一页数据。</li><li><strong>虚拟列表</strong>：只渲染可视区域内的节点，滚动时动态替换数据。可使用官方 <code>recycle-view</code> 组件或社区方案。</li><li><strong>setData 优化</strong>：使用路径表达式局部更新，避免每次拼接大数组后整体 setData。</li><li><strong>图片懒加载</strong>：设置 <code>lazy-load</code> 属性，只加载可视区域内的图片。</li></ul><h3>代码示例</h3><pre><code class=\"language-javascript\">// 分页加载 + 局部更新\nPage({\n  data: { list: [], page: 1 },\n  async loadMore() {\n    const res = await fetchList(this.data.page);\n    // 使用路径表达式追加数据，而不是拼接后整体赋值\n    const updateData = {};\n    res.list.forEach((item, index) => {\n      updateData[`list[${this.data.list.length + index}]`] = item;\n    });\n    this.setData(updateData);\n  }\n});</code></pre><pre><code class=\"language-html\">&lt;!-- 图片懒加载 --&gt;\n&lt;image src=\"{{ item.img }}\" lazy-load /&gt;</code></pre><h3>口语化回答示例</h3><p>“面试官您好，长列表优化主要靠三板斧。第一是分页加载，配合 onReachBottom 每次只请求一页。第二是虚拟列表，只渲染屏幕可见区域的节点，数据量上万条的时候必须用。第三是 setData 优化，追加数据的时候别用 concat 拼完再整体 setData，要用路径表达式逐个追加，这样只传输新增的数据。另外图片一定要加 lazy-load，不然一次性加载几百张图内存直接爆。”",
+    "createTime": 1749369600000
+  },
+  {
+    "id": 20,
+    "title": "小程序的 Behavior 是什么？和 mixins 有什么关系？",
+    "content": "<p>Behavior 是小程序提供的代码复用机制，类似于 Vue 中的 mixins。</p><h3>核心作用</h3><ul><li>将多个组件/页面中相同的 data、properties、methods、生命周期等抽取到 Behavior 中。</li><li>组件/页面通过 <code>behaviors</code> 数组引入，Behavior 中的内容会自动合并到组件中。</li><li>支持多个 Behavior 组合，也支持 Behavior 嵌套引用其他 Behavior。</li></ul><h3>合并规则</h3><p>当 Behavior 和组件中存在同名属性时，组件自身的属性优先。同名方法会被组件的方法覆盖。data 中的同名属性也是组件优先。</p><h3>代码示例</h3><pre><code class=\"language-javascript\">// behaviors/list-behavior.js\nmodule.exports = Behavior({\n  data: { loading: false, list: [] },\n  methods: {\n    async fetchList() {\n      this.setData({ loading: true });\n      const res = await wx.request({ url: this.data.apiUrl });\n      this.setData({ list: res.data, loading: false });\n    }\n  }\n});\n\n// pages/index/index.js\nconst listBehavior = require('../../behaviors/list-behavior');\nPage({\n  behaviors: [listBehavior],\n  data: { apiUrl: '/api/products' },\n  onLoad() {\n    this.fetchList(); // 来自 Behavior 的方法\n  }\n});</code></pre><h3>口语化回答示例</h3><p>“面试官您好，Behavior 就是小程序版的 mixins。当多个页面或组件有相同的逻辑，比如列表页都要有 loading、分页、fetchList 这些，就可以抽成一个 Behavior，然后在 behaviors 数组里引入。合并规则是组件自身的优先级更高，同名方法会被组件的覆盖。实际开发中我一般用它来抽取列表页的通用逻辑、表单验证逻辑这些，能减少大量重复代码。”",
+    "createTime": 1749369600000
+  }
+]

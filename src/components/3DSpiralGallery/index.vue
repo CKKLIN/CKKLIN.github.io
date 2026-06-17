@@ -177,7 +177,7 @@ function createSpiral() {
       material.needsUpdate = true 
     },
     undefined,
-    (err) => {
+    (_err) => {
       // console.error('纹理加载失败:', err)
     }
   )
