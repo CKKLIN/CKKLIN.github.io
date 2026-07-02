@@ -34,6 +34,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { getQuestionListAPI } from '@/api/questionApi'
 import { loadMainjing } from '@/utils/dataLoader'
 import { useTokenStore } from '@/stores/token'
 import { fetchUsers, updateUser } from '@/api/userApi'
@@ -87,10 +88,17 @@ const syncToServer = async () => {
 const loadFavs = async () => {
     const userId = localStorage.getItem('userId')
     if (!userId) return
-    const [users, { vueList }] = await Promise.all([fetchUsers(), loadMainjing()])
+    const users = await fetchUsers()
     currentUser.value = users.find(u => u.id === Number(userId)) || null
     const ids = getUserCollectIds()
-    favList.value = vueList.filter(v => ids.includes(v.id))
+    // 优先用 MySQL API 获取面经, 失败回退静态 JSON
+    try {
+      const vueQuestions = await getQuestionListAPI('vue')
+      favList.value = vueQuestions.filter((v) => ids.includes(v.id))
+    } catch {
+      const { vueList } = await loadMainjing()
+      favList.value = vueList.filter((v) => ids.includes(v.id))
+    }
 }
 
 const removeFav = async (id) => {

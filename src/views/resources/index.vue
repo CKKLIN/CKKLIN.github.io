@@ -22,15 +22,17 @@
 import memoCard from '@/components/card/memoCard/index.vue'
 import zoomCard from '@/components/card/zoomCard/index.vue'
 import { ref, onMounted } from 'vue'
-import { loadResources } from '@/utils/dataLoader'
+import { getResourcesAPI } from '@/api/resourceApi'
 
 const headers = ref<any[]>([])
 const cardList = ref<any[]>([])
 
 onMounted(async () => {
-    const data = await loadResources()
+  try {
+    const data = await getResourcesAPI()
     headers.value = data.headers
     cardList.value = data.cards
+  } catch {}
 })
 </script>
 <style scoped>

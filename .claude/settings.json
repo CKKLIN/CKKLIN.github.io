@@ -6,10 +6,31 @@
       "Bash(mkdir -p d:/money/erzhi-blog-vue3/src/components/WaterMistGlass/shaders)",
       "Bash(npx vite *)",
       "Bash(npm run *)",
-      "Bash(npx vue-tsc *)"
-    ],
+      "Bash(npx vue-tsc *)",
+      "Bash(mkdir -p \"d:\\\\money\\\\erzhi-blog-vue3\\\\sql\" \"d:\\\\money\\\\erzhi-blog-vue3\\\\src\\\\server\")",
+      "Bash(npx tsx *)",
+      "Bash(curl -s http://localhost:5200/local-api/comments)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(curl -s http://localhost:5200/local-api/books?featured=3)",
+      "Bash(curl -s http://localhost:5200/local-api/resources/headers)",
+      "Bash(curl -s \"http://localhost:5200/local-api/questions?category=vue\")",
+      "Bash(curl -s http://localhost:5200/local-api/users)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'{len\\(d\\)}条, 首条: {d[0][\\\\\"title\\\\\"][:40]}...'\\)\")",
+      "Bash(curl -s \"http://localhost:5200/local-api/questions?category=react\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'{len\\(d\\)}条'\\)\")",
+      "Bash(curl -s \"http://localhost:5200/local-api/questions?category=%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F\")",
+      "Bash(curl -s \"http://localhost:5200/local-api/questions/1?category=vue\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['title'][:40] if d else 'None'\\)\")",
+      "WebFetch(domain:console.sqlpub.com)",
+      "WebSearch",
+      "Bash(rm -f vite-plugin-local-db.ts vite-plugin-user-api.ts src/server/db.ts scripts/seed-db.ts .env)",
+      "Bash(rm -rf src/server)",
+      ],
     "additionalDirectories": [
-      "d:\\money\\erzhi-blog-vue3\\src\\components\\WaterMistGlass"
+      "d:\\money\\erzhi-blog-vue3\\src\\components\\WaterMistGlass",
+      "d:\\money\\erzhi-blog-vue3"
     ]
   }
 }

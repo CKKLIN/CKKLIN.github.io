@@ -2,7 +2,7 @@
   <div class="container" ref="containerRef" @scroll="onScroll">
     <div class="top">
       <titleCard class="title"></titleCard>
-      <Spiraly v-if="bookCovers.length" ref="spiralRef" class="Spiraly" :images="bookCovers"></Spiraly>
+      <Spiraly ref="spiralRef" class="Spiraly" :images="bookCovers"></Spiraly>
     </div>
     <div class="body">
       <div class="center">
@@ -12,7 +12,7 @@
       <div class="body-two">
         <titleCard class="body-two-title"></titleCard>
         <titleCard class="two-title"></titleCard>
-        <cardAnimation v-if="animationItems.length" :items="animationItems" :scroller="containerRef" trigger-start="top top" style="width: 100%;"
+        <cardAnimation :items="animationItems" :scroller="containerRef" trigger-start="top top" style="width: 100%;"
           trigger-end="bottom bottom" scroll-height="300vh" :converge-speed="0.15" sticky-top="0"
           container-height="100vh">
           <template #front="{ item }">
@@ -44,25 +44,29 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
 import Spiraly from '@/components/3DSpiralGallery/index.vue'
 import titleCard from '@/views/book/components/title/index.vue'
 import card from '@/views/book/components/card/index.vue'
 import cardAnimation from '@/components/cardAnimation/index.vue'
-import { loadBooks, getBookCovers } from '@/utils/dataLoader'
-import { ref } from 'vue'
+import { getBookCoversAPI, getFeaturedBooksAPI } from '@/api/bookApi'
+import { onMounted } from 'vue'
 
 const bookCovers = ref<string[]>([])
 const animationItems = ref<any[]>([])
 
-getBookCovers(120).then(covers => { bookCovers.value = covers })
-loadBooks().then(({ bookList3 }) => {
-  animationItems.value = bookList3.map(b => ({
-    title: b.name,
-    cover: b.cover,
-    author: b.author,
-    desc: b.introduction,
-    backColor: b.backColor,
-  }))
+onMounted(async () => {
+  try {
+    bookCovers.value = await getBookCoversAPI(120)
+    const featured = await getFeaturedBooksAPI()
+    animationItems.value = featured.map((b: any) => ({
+      title: b.name,
+      cover: b.cover,
+      author: b.author,
+      desc: b.introduction,
+      backColor: b.backColor,
+    }))
+  } catch {}
 })
 
 const spiralRef = ref()
@@ -182,6 +186,7 @@ function onScroll(e: Event) {
   background: rgb(53, 53, 53);
   position: relative;
 }
+
 .top {
   position: sticky;
   top: 0;
@@ -190,20 +195,8 @@ function onScroll(e: Event) {
   display: flex;
   justify-content: center;
   z-index: 0;
-  /* background-color: #dddcdc67; */
-  /* 背景图与渐变的叠加 */
-  background: 
-    linear-gradient(rgba(14, 62, 134, 0), rgba(54, 125, 184, 0.281), rgba(76, 153, 216, 0.507)), 
-    url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj13.jpg');
-    
-  /* 【核心修改】cover 表示拉伸覆盖整个容器区域；第一层渐变不需要平铺/拉伸，所以写 no-repeat */
-  background-size: cover, cover; 
-  
-  /* 让背景图居中显示，避免被裁切到奇怪的位置 */
-  background-position: center center; 
-  
-  /* 防止滚动时出现背景图边缘 */
-  background-repeat: no-repeat, no-repeat; 
+  background: linear-gradient(rgba(14, 62, 134, 0), rgba(54, 125, 184, 0.281), rgba(76, 153, 216, 0.507)), url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj4.jpeg');
+
 }
 
 .title {

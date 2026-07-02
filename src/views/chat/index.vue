@@ -21,12 +21,24 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import cardAnimation from '@/components/cardAnimation/index.vue'
+import { getFeaturedBooksAPI } from '@/api/bookApi'
 import { loadBooks } from '@/utils/dataLoader'
 
 const containerRef = ref()
 const animationItems = ref([] as any[])
 
 onMounted(async () => {
+  try {
+    // 优先使用 MySQL API
+    const featured = await getFeaturedBooksAPI()
+    animationItems.value = featured.map((b) => ({
+      title: b.name,
+      cover: b.cover,
+      author: b.author,
+      desc: b.introduction,
+    }))
+  } catch {
+    // 回退到静态数据
     const { bookList3 } = await loadBooks()
     animationItems.value = bookList3.map(b => ({
         title: b.name,
@@ -34,6 +46,7 @@ onMounted(async () => {
         author: b.author,
         desc: b.introduction,
     }))
+  }
 })
 </script>
 <style scoped>

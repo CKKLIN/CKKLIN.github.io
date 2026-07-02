@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
+import { getQuestionListAPI } from '@/api/questionApi'
 import { loadMainjing } from '@/utils/dataLoader'
 import { fetchUsers, updateUser } from '@/api/userApi'
 import { computed, ref, onMounted } from 'vue'
@@ -32,14 +33,40 @@ const props = defineProps({
 })
 
 const category = computed(() => (route.query.category as string) || 'vue')
+
 interface DataItem {
   id: number;
   title: string;
   content: string;
   createTime: number;
 }
-const categoryTag = ref()
-const dataList = ref<DataItem[]>([]);
+const categoryTag = ref('')
+const dataList = ref<DataItem[]>([])
+
+const loadQuestions = async () => {
+  // 优先使用 MySQL API, 失败则回退到静态 JSON
+  try {
+    if (category.value === 'vue' || category.value === 'uniapp') {
+      dataList.value = await getQuestionListAPI(category.value as 'vue' | 'uniapp')
+    } else {
+      // 新分类(react/微信小程序)从静态数据加载
+      const data = await loadMainjing()
+      if (category.value === 'react') dataList.value = data.reactList
+      else if (category.value === '微信小程序') dataList.value = data.wxAppList
+    }
+  } catch {
+    const data = await loadMainjing()
+    if (category.value === 'vue') dataList.value = data.vueList
+    else if (category.value === 'uniapp') dataList.value = data.uniappList
+    else if (category.value === 'react') dataList.value = data.reactList
+    else if (category.value === '微信小程序') dataList.value = data.wxAppList
+  }
+  // 设置分类标签
+  const tagMap: Record<string, string> = {
+    vue: 'Vue', uniapp: 'UniApp', react: 'React', '微信小程序': '微信小程序'
+  }
+  categoryTag.value = tagMap[category.value] || 'Vue'
+}
 
 // 假设你的用户类型长这样
 interface User {
@@ -51,23 +78,6 @@ interface User {
   avatar: string;
   collectList?: { id: number; collect: string; }[]; // 注意这里可能有可选属性
 }
-
-onMounted(async ()=>{
-    const data = await loadMainjing()
-    if(category.value=='vue'){
-        categoryTag.value="Vue"
-        dataList.value=data.vueList
-    }else if(category.value=='uniapp'){
-        categoryTag.value="UniApp"
-        dataList.value=data.uniappList
-    }else if(category.value=='react'){
-        categoryTag.value="React"
-        dataList.value=data.reactList
-    }else if(category.value=='微信小程序'){
-        categoryTag.value="微信小程序"
-        dataList.value=data.wxAppList
-    }
-})
 
 // 明确告诉 TypeScript，这个 ref 的值可以是 User 对象，也可以是 null
 const currentUser = ref<User | null>(null); 
@@ -142,7 +152,7 @@ const toggleFav = async () => {
     await updateUser(currentUser.value)
 }
 
-onMounted(loadUser)
+onMounted(() => { loadQuestions(); loadUser() })
 
 const navigateTo = (index: number) => {
     if (index < 0 || index >= dataList.value.length) return

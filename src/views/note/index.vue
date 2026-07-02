@@ -5,6 +5,7 @@
       <el-input class="center-input" placeholder="不留下点什么吗" v-model="input" @keyup.enter="send"></el-input>
     </div>
     <div class="bullet">
+      <rain></rain>
       <vue-danmaku ref="danmakuRef" :speeds="100" v-model:danmus="commentList" :randomChannel="true" useSlot loop
         :channels="channels" class="danmaku" :isSuspend="true" :top="10">
         <template v-slot:danmu="{ index, danmu }">
@@ -18,6 +19,7 @@
     </div>
     <CommentSection
       :comments="commentList"
+      @getComment="getComment"
       @isGood="(id) => isGood(id, user.id)"
       @noGood="(id) => noGood(id, user.id)"
     />
@@ -28,8 +30,8 @@
 <script setup>
 import vueDanmaku from 'vue-danmaku'
 import { onMounted, ref } from 'vue';
-import { ElNotification } from 'element-plus'
 import { getCommentListAPI, addCommentAPI, updateCommentAPI } from '../../api/comment';
+import { ElNotification } from 'element-plus'
 import useCounter from '../../stores/pinia';
 // import rain from '../../components/modules/rain.vue'
 import { useRouter } from 'vue-router';

@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { ref, onUnmounted, onMounted } from 'vue'
-import { loadBooks } from '@/utils/dataLoader'
+import { getBookListAPI } from '@/api/bookApi'
 
 interface Book {
     id: number | string
@@ -44,9 +44,11 @@ interface Book {
 }
 
 const books = ref<Book[]>([])
+
 onMounted(async () => {
-    const data = await loadBooks()
-    books.value = data.bookList
+  try {
+    books.value = await getBookListAPI()
+  } catch {}
 })
 const listRef = ref<HTMLElement>()
 const canScrollLeft = ref(false)
