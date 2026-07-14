@@ -169,10 +169,15 @@ function createSpiral() {
       metalness: 0.1,
     })
 
-    // 手动加载图片 → Three.js 纹理，绕过 TextureLoader 内部缓存
+    // 手动加载图片 → Three.js 纹理
     const imageUrl = props.images[img]
+    // 开发环境通过 Vite proxy 绕过 OSS CORS 限制
+    const proxyUrl = import.meta.env.DEV && imageUrl.startsWith('https://sky-lkc.oss-cn-beijing.aliyuncs.com')
+      ? imageUrl.replace('https://sky-lkc.oss-cn-beijing.aliyuncs.com', '/oss')
+      : imageUrl
     const imageElement = new Image()
-    imageElement.src = imageUrl
+    imageElement.crossOrigin = 'anonymous'
+    imageElement.src = proxyUrl
     imageElement.onload = () => {
       const tex = new THREE.Texture(imageElement)
       tex.colorSpace = THREE.SRGBColorSpace
@@ -181,7 +186,7 @@ function createSpiral() {
       material.needsUpdate = true
     }
     imageElement.onerror = () => {
-      console.warn('[3DSpiralGallery] image load failed:', imageUrl)
+      // CORS 或网络错误 — 保留灰色占位纹理
     }
 
     const mesh = new THREE.Mesh(geometry, material)

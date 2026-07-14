@@ -27,6 +27,10 @@ export default defineConfig({
         target: 'http://localhost:8024', // 后端服务器地址
         changeOrigin: true, // 是否改变请求域名
         rewrite: (path) => path.replace(/^\/api/, '')//将原有请求路径中的api替换为''
+      },
+      '/oss': {
+        target: 'https://sky-lkc.oss-cn-beijing.aliyuncs.com',
+        changeOrigin: true,
       }
     }
   },
