@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import { loadBooks, getBookCovers as getBookCoversFallback } from '@/utils/dataLoader'
+import { withCache } from '@/utils/cache'
 
 export interface Book {
   id: number
@@ -14,23 +15,23 @@ function normalize(b: any): Book {
   return { ...b, backColor: b.back_color, back_color: undefined }
 }
 
-export async function getBookListAPI(): Promise<Book[]> {
+export const getBookListAPI = withCache('books', async () => {
   try {
     const { data, error } = await supabase.from('books').select('*').order('id')
     if (!error && data) return data.map(normalize)
   } catch {}
   const { bookList } = await loadBooks()
   return bookList
-}
+})
 
-export async function getFeaturedBooksAPI(): Promise<Book[]> {
+export const getFeaturedBooksAPI = withCache('books-featured', async () => {
   try {
     const { data, error } = await supabase.from('books').select('*').not('back_color', 'is', null).order('id')
     if (!error && data) return data.map(normalize)
   } catch {}
   const { bookList3 } = await loadBooks()
   return bookList3
-}
+})
 
 export async function getBookCoversAPI(count: number = 30): Promise<string[]> {
   try {
