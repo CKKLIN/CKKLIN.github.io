@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as THREE from 'three'
 import { gsap } from 'gsap'
 
@@ -39,8 +39,8 @@ let wobbleZTo: ReturnType<typeof gsap.quickTo>
 let ctx: gsap.Context | null = null
 let hoverTweenIn: gsap.core.Tween | null = null
 let hoverTweenOut: gsap.core.Tween | null = null
+let initialized = false
 
-const IMAGE_COUNT = props.images.length
 const R_MAX = 5.5           // 螺旋顶部半径（最外圈）
 const R_MIN = 3.5           // 螺旋底部半径（最内圈）
 const TURN_SPACING = 2.7    // 每圈螺旋的垂直间距
@@ -101,21 +101,22 @@ function createSpiral() {
 
   let angle = 0
   let accumulatedY = 0
+  const imageCount = props.images.length
 
-  for (let img = 0; img < IMAGE_COUNT; img++) {
+  for (let img = 0; img < imageCount; img++) {
     const positions: number[] = []
     const normals: number[] = []
     const uvs: number[] = []
     const indices: number[] = []
 
     // 根据当前半径算出该图片的垂直步进，保证每圈上升高度一致
-    const imgT = img / IMAGE_COUNT
+    const imgT = img / imageCount
     const imgRadius = R_MAX - (R_MAX - R_MIN) * imgT
     const verticalStep = TURN_SPACING * RIBBON_WIDTH / (2 * Math.PI * imgRadius)
 
     for (let s = 0; s <= SUBDIVISIONS; s++) {
       const localT = s / SUBDIVISIONS
-      const globalT = (img + localT) / IMAGE_COUNT
+      const globalT = (img + localT) / imageCount
       const radius = R_MAX - (R_MAX - R_MIN) * globalT
 
       if (s > 0) {
@@ -150,8 +151,8 @@ function createSpiral() {
     accumulatedY += verticalStep
 
     // 图片间隔
-    if (IMAGE_GAP > 0 && img < IMAGE_COUNT - 1) {
-      const gapT = (img + 1) / IMAGE_COUNT
+    if (IMAGE_GAP > 0 && img < imageCount - 1) {
+      const gapT = (img + 1) / imageCount
       const gapRadius = R_MAX - (R_MAX - R_MIN) * gapT
       angle += IMAGE_GAP / gapRadius
     }
@@ -327,8 +328,7 @@ function cleanup() {
   containerRef.value?.removeChild(renderer.domElement)
 }
 
-onMounted(() => {
-  if (!props.images.length) return
+function start() {
   try {
     initScene()
   } catch (e) {
@@ -350,11 +350,31 @@ onMounted(() => {
   window.addEventListener('resize', handleResize)
   containerRef.value?.addEventListener('mousemove', handleMouseMove)
   containerRef.value?.addEventListener('wheel', handleWheel, { passive: !PREVENT_SCROLL })
+}
+
+let stopWatch: (() => void) | null = null
+
+onMounted(() => {
+  if (props.images.length) {
+    initialized = true
+    start()
+  } else {
+    stopWatch = watch(() => props.images.length, (len) => {
+      if (len > 0) {
+        stopWatch?.()
+        stopWatch = null
+        initialized = true
+        start()
+      }
+    })
+  }
 })
 
 defineExpose({ onParentScroll })
 
 onUnmounted(() => {
+  stopWatch?.()
+  if (!initialized) return
   hoverTweenIn?.kill()
   hoverTweenOut?.kill()
   ctx?.revert()
