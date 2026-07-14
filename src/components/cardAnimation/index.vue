@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -130,6 +130,7 @@ let P4 = 0.93         // 阶段5开始：卡片翻转并排
 const D = 10  // GSAP timeline 总时长系数
 
 let ctx: gsap.Context | null = null  // GSAP 上下文，用于清理
+let stopWatch: (() => void) | null = null
 
 // 空闲状态下卡片微弹动画
 function createBounceTweens(cards: HTMLElement[]): gsap.core.Tween[] {
@@ -328,10 +329,22 @@ const initAnimations = () => {
 }
 
 onMounted(() => {
-  requestAnimationFrame(initAnimations) // 延迟一帧确保 DOM 和父组件 ref 就绪
+  if (props.items.length) {
+    requestAnimationFrame(initAnimations)
+  } else {
+    stopWatch = watch(() => props.items.length, (len) => {
+      if (len > 0) {
+        stopWatch?.()
+        stopWatch = null
+        // 等一帧让 DOM 渲染完 v-for 再初始化
+        requestAnimationFrame(initAnimations)
+      }
+    })
+  }
 })
 
 onUnmounted(() => {
+  stopWatch?.()
   ctx?.revert() // 清理所有 GSAP 动画和 ScrollTrigger
 })
 </script>
