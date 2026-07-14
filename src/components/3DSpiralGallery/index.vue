@@ -88,7 +88,6 @@ function initScene() {
 function createSpiral() {
   spiralGroup = new THREE.Group()
   const loader = new THREE.TextureLoader()
-  loader.setCrossOrigin('anonymous')
 
   // 灰色占位纹理
   const placeholderCanvas = document.createElement('canvas')
