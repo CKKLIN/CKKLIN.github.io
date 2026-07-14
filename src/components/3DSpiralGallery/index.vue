@@ -87,7 +87,6 @@ function initScene() {
 
 function createSpiral() {
   spiralGroup = new THREE.Group()
-  const loader = new THREE.TextureLoader()
 
   // 灰色占位纹理
   const placeholderCanvas = document.createElement('canvas')
@@ -170,18 +169,20 @@ function createSpiral() {
       metalness: 0.1,
     })
 
-  const texture = loader.load(
-    props.images[img], 
-    () => { 
-      material.map = texture 
-      material.needsUpdate = true 
-    },
-    undefined,
-    (_err) => {
-      // console.error('纹理加载失败:', err)
+    // 手动加载图片 → Three.js 纹理，绕过 TextureLoader 内部缓存
+    const imageUrl = props.images[img]
+    const imageElement = new Image()
+    imageElement.src = imageUrl
+    imageElement.onload = () => {
+      const tex = new THREE.Texture(imageElement)
+      tex.colorSpace = THREE.SRGBColorSpace
+      tex.needsUpdate = true
+      material.map = tex
+      material.needsUpdate = true
     }
-  )
-  texture.colorSpace = THREE.SRGBColorSpace
+    imageElement.onerror = () => {
+      console.warn('[3DSpiralGallery] image load failed:', imageUrl)
+    }
 
     const mesh = new THREE.Mesh(geometry, material)
     // 记录径向朝外方向，用于 hover 时偏移
