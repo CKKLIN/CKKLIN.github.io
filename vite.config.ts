@@ -31,6 +31,7 @@ export default defineConfig({
       '/oss': {
         target: 'https://sky-lkc.oss-cn-beijing.aliyuncs.com',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/oss/, ''),
       }
     }
   },
