@@ -59,6 +59,7 @@ onMounted(async () => {
   try {
     bookCovers.value = await getBookCoversAPI(120)
     const featured = await getFeaturedBooksAPI()
+    // console.log("sd沙发沙发", bookCovers.value)
     animationItems.value = featured.map((b: any) => ({
       title: b.name,
       cover: b.cover,
