@@ -37,7 +37,10 @@ const bodyRef = ref<HTMLElement | null>(null)
 const dataList = ref<any[]>([])
 
 const category = computed(() => (route.query.category as string) || 'vue')
-const categoryTitle = computed(() => category.value === 'uniapp' ? 'UniApp' : 'Vue')
+const categoryTitle = computed(() => {
+  const map: Record<string, string> = { vue: 'Vue', uniapp: 'UniApp', react: 'React', '微信小程序': '微信小程序', electron: 'Electron' }
+  return map[category.value] || 'Vue'
+})
 
 const loadData = async () => {
   try {

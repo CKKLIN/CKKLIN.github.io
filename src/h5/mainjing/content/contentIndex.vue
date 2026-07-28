@@ -49,10 +49,11 @@ const loadQuestions = async () => {
     if (category.value === 'vue' || category.value === 'uniapp') {
       dataList.value = await getQuestionListAPI(category.value as 'vue' | 'uniapp')
     } else {
-      // 新分类(react/微信小程序)从静态数据加载
+      // 新分类(react/微信小程序/electron)从静态数据加载
       const data = await loadMainjing()
-      if (category.value === 'react') dataList.value = data.reactList
-      else if (category.value === '微信小程序') dataList.value = data.wxAppList
+      if (category.value === 'react') dataList.value = data.reactList || []
+      else if (category.value === '微信小程序') dataList.value = data.wxAppList || []
+      else if (category.value === 'electron') dataList.value = data.electronList || []
     }
   } catch {
     const data = await loadMainjing()
@@ -60,10 +61,11 @@ const loadQuestions = async () => {
     else if (category.value === 'uniapp') dataList.value = data.uniappList
     else if (category.value === 'react') dataList.value = data.reactList
     else if (category.value === '微信小程序') dataList.value = data.wxAppList
+    else if (category.value === 'electron') dataList.value = data.electronList || []
   }
   // 设置分类标签
   const tagMap: Record<string, string> = {
-    vue: 'Vue', uniapp: 'UniApp', react: 'React', '微信小程序': '微信小程序'
+    vue: 'Vue', uniapp: 'UniApp', react: 'React', '微信小程序': '微信小程序', electron: 'Electron'
   }
   categoryTag.value = tagMap[category.value] || 'Vue'
 }

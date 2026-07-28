@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase'
 import { loadMainjing } from '@/utils/dataLoader'
 import { withCache } from '@/utils/cache'
 
-export type QuestionCategory = 'vue' | 'uniapp' | 'react' | '微信小程序'
+export type QuestionCategory = 'vue' | 'uniapp' | 'react' | '微信小程序' | 'electron'
 
 export interface Question {
   id: number
@@ -17,6 +17,7 @@ const tableMap: Record<string, string> = {
   uniapp: 'uniapp_questions',
   react: 'react_questions',
   '微信小程序': 'wxapp_questions',
+  electron: 'electron_questions',
 }
 
 export const getQuestionListAPI = withCache(
@@ -35,7 +36,7 @@ export const getQuestionListAPI = withCache(
     // 回退静态 JSON
     const m = await loadMainjing()
     const fallbackMap: Record<string, any[]> = {
-      vue: m.vueList, uniapp: m.uniappList, react: m.reactList, '微信小程序': m.wxAppList,
+      vue: m.vueList, uniapp: m.uniappList, react: m.reactList, '微信小程序': m.wxAppList, electron: m.electronList,
     }
     return (fallbackMap[category] || []).map((q: any) => ({ ...q, category, createTime: q.createTime }))
   },
@@ -53,7 +54,7 @@ export const getQuestionByIdAPI = withCache(
     } catch {}
     const m = await loadMainjing()
     const fallbackMap: Record<string, any[]> = {
-      vue: m.vueList, uniapp: m.uniappList, react: m.reactList, '微信小程序': m.wxAppList,
+      vue: m.vueList, uniapp: m.uniappList, react: m.reactList, '微信小程序': m.wxAppList, electron: m.electronList,
     }
     const found = (fallbackMap[category] || []).find((q: any) => q.id === id)
     return found ? { ...found, category, createTime: found.createTime } : null

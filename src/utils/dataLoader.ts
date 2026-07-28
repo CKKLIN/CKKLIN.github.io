@@ -22,6 +22,7 @@ export interface MainjingData {
   uniappList: any[]
   reactList: any[]
   wxAppList: any[]
+  electronList: any[]
 }
 export function loadMainjing() {
   return loadJSON<MainjingData>('mainjing.json')

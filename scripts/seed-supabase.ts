@@ -26,14 +26,14 @@ async function loadTsData() {
   const d = await import(pathToFileURL(path.join(DATA_DIR, 'data.ts')).href)
   return {
     vueList: m.vueList, uniappList: m.uniappList,
-    reactList: m.reactList || [], wxAppList: m.wxAppList || [],
+    reactList: m.reactList || [], wxAppList: m.wxAppList || [], electronList: m.electronList || [],
     bookList: d.bookList, bookList3: d.bookList3,
   }
 }
 
 async function seed() {
-  const { vueList, uniappList, reactList, wxAppList, bookList, bookList3 } = await loadTsData()
-  console.log(`📦 Vue ${vueList.length} + UniApp ${uniappList.length} + React ${reactList.length} + 微信小程序 ${wxAppList.length} + 书单 ${bookList.length}`)
+  const { vueList, uniappList, reactList, wxAppList, electronList, bookList, bookList3 } = await loadTsData()
+  console.log(`📦 Vue ${vueList.length} + UniApp ${uniappList.length} + React ${reactList.length} + 微信小程序 ${wxAppList.length} + Electron ${electronList.length} + 书单 ${bookList.length}`)
 
   const inserts: [string, any][] = []
 
@@ -42,6 +42,7 @@ async function seed() {
   for (const q of uniappList) inserts.push(['uniapp_questions', { id: q.id, title: q.title, content: q.content, create_time: q.createTime }])
   for (const q of reactList) inserts.push(['react_questions', { id: q.id, title: q.title, content: q.content, create_time: q.createTime }])
   for (const q of wxAppList) inserts.push(['wxapp_questions', { id: q.id, title: q.title, content: q.content, create_time: q.createTime }])
+  for (const q of electronList) inserts.push(['electron_questions', { id: q.id, title: q.title, content: q.content, create_time: q.createTime }])
 
   // 书单
   for (const b of bookList) {

@@ -6,6 +6,7 @@
             <button class="capsule-btn" @click="lookContent('uniapp')">Uni-app</button>
             <button class="capsule-btn" @click="lookContent('react')">React</button>
             <button class="capsule-btn" @click="lookContent('微信小程序')">微信小程序</button>
+            <button class="capsule-btn" @click="lookContent('electron')">Electron</button>
         </div>
     </div>
 </template>
