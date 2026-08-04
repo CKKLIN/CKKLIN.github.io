@@ -44,16 +44,15 @@ const categoryTag = ref('')
 const dataList = ref<DataItem[]>([])
 
 const loadQuestions = async () => {
-  // 优先使用 MySQL API, 失败则回退到静态 JSON
+  // 优先使用 Supabase API, 失败则回退到静态 JSON
   try {
-    if (category.value === 'vue' || category.value === 'uniapp') {
-      dataList.value = await getQuestionListAPI(category.value as 'vue' | 'uniapp')
+    if (category.value === 'vue' || category.value === 'uniapp' || category.value === 'electron') {
+      dataList.value = await getQuestionListAPI(category.value as 'vue' | 'uniapp' | 'electron')
     } else {
-      // 新分类(react/微信小程序/electron)从静态数据加载
+      // 其他分类(react/微信小程序)从静态数据加载
       const data = await loadMainjing()
       if (category.value === 'react') dataList.value = data.reactList || []
       else if (category.value === '微信小程序') dataList.value = data.wxAppList || []
-      else if (category.value === 'electron') dataList.value = data.electronList || []
     }
   } catch {
     const data = await loadMainjing()
