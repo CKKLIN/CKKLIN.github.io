@@ -3,7 +3,7 @@
     <div class="contain" :class="{ register: !isLogin }">
       <div class="big-box" :class="{ active: isLogin }">
         <div class="big-contain" key="bigContainLogin" v-if="isLogin"  style="background-position: 80vw 80vh;"
-          :style="{ backgroundImage: `url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj5.jpg'`, backgroundSize: '100vw 100vh'}">
+          :style="{ backgroundImage: `url('https://sky-lkc.oss-cn-beijing.aliyuncs.com/bj/bj5.jpg')`, backgroundSize: '100vw 100vh'}">
           <el-form :model="loginForm" label-width="auto" class="login" ref="loginFormRef" :rules="loginRules">
             <div class="btitle">用户登录</div>
             <el-form-item style="width: 40%;" prop="account" label-width="0">
